@@ -8,11 +8,10 @@ import androidx.lifecycle.ViewModelProvider;
 
 import wadosm.bluetooth.R;
 
-public class MainActivity extends AppCompatActivity implements MainActivityModelGetter {
 
-    public static ModelFactory modelFactory = new DefaultModelFactory();
+public class MainActivity extends AppCompatActivity implements MainViewModelGetter {
 
-    public static FragmentFactory fragmentFactory = new FragmentFactory();
+    static DependencyFactory dependencyFactory = new DefaulDependencyFactory();
 
     MainViewModel model;
 
@@ -21,22 +20,24 @@ public class MainActivity extends AppCompatActivity implements MainActivityModel
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        model = modelFactory.getModel(this);
+        model = dependencyFactory.getModel(this);
 
         model.getSwitchFramgmentMLD().observe(this, this::setFragment);
 
         model.getUpdateTitleMLD().observe(this, this::setTitle);
 
         if (savedInstanceState == null) {
-            Fragment fragment = fragmentFactory.getMachineryConnectFragment();
-
-            model.getSwitchFramgmentMLD().postValue(fragment);
+            model.onActivityStart();
         }
     }
 
     @Override
-    public MainViewModel getModel() {
+    public PublicMainViewModel getModel() {
         return model;
+    }
+
+    public static void setDependencyFactory(DependencyFactory dependencyFactory) {
+        MainActivity.dependencyFactory = dependencyFactory;
     }
 
     private void setFragment(Fragment fragment) {
@@ -46,7 +47,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityModel
                 .commit();
     }
 
-    private static class DefaultModelFactory implements ModelFactory {
+    public interface DependencyFactory {
+        MainViewModel getModel(MainActivity owner);
+    }
+
+    public static class DefaulDependencyFactory implements DependencyFactory {
         @Override
         public MainViewModel getModel(MainActivity owner) {
             return new ViewModelProvider(owner).get(MainViewModelImpl.class);

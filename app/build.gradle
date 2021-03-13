@@ -77,10 +77,13 @@ dependencies {
 
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
 
+
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
 
     androidTestImplementation group: 'org.mockito', name: 'mockito-android', version: '3.8.0'
+
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.8.0'
 
 
 }

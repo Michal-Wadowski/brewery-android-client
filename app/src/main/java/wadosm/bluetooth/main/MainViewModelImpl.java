@@ -10,6 +10,14 @@ public class MainViewModelImpl extends ViewModel implements MainViewModel {
 
     private MutableLiveData<String> updateTitleMLD = new MutableLiveData<>();
 
+    static DependencyFactory dependencyFactory = new DefaulDependencyFactory();
+
+    FragmentFactory fragmentFactory;
+
+    public MainViewModelImpl() {
+        fragmentFactory = dependencyFactory.getFragmentFactory();
+    }
+
     @Override
     public MutableLiveData<Fragment> getSwitchFramgmentMLD() {
         return switchFramgmentMLD;
@@ -18,5 +26,27 @@ public class MainViewModelImpl extends ViewModel implements MainViewModel {
     @Override
     public MutableLiveData<String> getUpdateTitleMLD() {
         return updateTitleMLD;
+    }
+
+    public static void setDependencyFactory(DependencyFactory dependencyFactory) {
+        MainViewModelImpl.dependencyFactory = dependencyFactory;
+    }
+
+    @Override
+    public void onActivityStart() {
+        getSwitchFramgmentMLD().postValue(
+                fragmentFactory.getMachineryConnectFragment()
+        );
+    }
+
+    public interface DependencyFactory {
+        FragmentFactory getFragmentFactory();
+    }
+
+    public static class DefaulDependencyFactory implements DependencyFactory {
+        @Override
+        public FragmentFactory getFragmentFactory() {
+            return new FragmentFactory();
+        }
     }
 }

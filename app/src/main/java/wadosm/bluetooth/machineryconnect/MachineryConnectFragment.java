@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment;
 
 import wadosm.bluetooth.R;
 import wadosm.bluetooth.main.MainActivity;
-import wadosm.bluetooth.main.MainViewModel;
+import wadosm.bluetooth.main.PublicMainViewModel;
 
 public class MachineryConnectFragment extends Fragment {
 
@@ -28,7 +28,7 @@ public class MachineryConnectFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_machinery_connect, container, false);
     }
 
-    public MainViewModel getMainActivityModel() {
+    public PublicMainViewModel getMainActivityModel() {
         return ((MainActivity) getActivity()).getModel();
     }
 

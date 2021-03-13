@@ -9,18 +9,21 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import wadosm.bluetooth.machineryconnect.MachineryConnectFragment;
-import wadosm.bluetooth.main.FragmentFactory;
 import wadosm.bluetooth.main.MainActivity;
 import wadosm.bluetooth.main.MainViewModel;
 import wadosm.bluetooth.main.MainViewModelImpl;
-import wadosm.bluetooth.main.ModelFactory;
 
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-
+import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
@@ -28,14 +31,6 @@ public class MainActivityTest {
     @Rule
     public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(MainActivity.class, true, false);
 
-    @Mock
-    MutableLiveData<Fragment> switchFramgmentMLD;
-
-    @Mock
-    MutableLiveData<String> updateTitleMLD;
-
-    ModelFactory modelFactory = new TestModelFactory();
-    FragmentFactory fragmentFactory = new TestFragmentFactory();
 
     @Before
     public void setUp() {
@@ -43,47 +38,43 @@ public class MainActivityTest {
     }
 
     @Test
-    public void should_after_start_switch_to_machinery_connect_fragment() throws Throwable {
+    public void should_call_model_onActivityStart_after_start() throws Throwable {
         // given
-        MainActivity.modelFactory = modelFactory;
-        MainActivity.fragmentFactory = fragmentFactory;
+        MainViewModel modelMock = mock(MainViewModel.class);
+        when(modelMock.getUpdateTitleMLD()).thenReturn(new MutableLiveData<>());
+        when(modelMock.getSwitchFramgmentMLD()).thenReturn(new MutableLiveData<>());
+
+        MainActivity.setDependencyFactory(owner -> modelMock);
 
         // when
         activityRule.launchActivity(null);
 
         // then
-        activityRule.runOnUiThread(() -> verify(switchFramgmentMLD).postValue(fragmentFactory.getMachineryConnectFragment()));
-
+        verify(modelMock, times(1)).onActivityStart();
     }
 
-    static class TestFragmentFactory extends FragmentFactory {
+    @Test
+    public void should_switch_to_selected_fragment_on_switchFramgmentMLD() throws Throwable {
+        // given
 
-        Fragment fragment;
+        activityRule.runOnUiThread(() -> {
+            Fragment expectedFragment = MachineryConnectFragment.newInstance();
 
-        @Override
-        public Fragment getMachineryConnectFragment() {
-            if (fragment == null) {
-                fragment = MachineryConnectFragment.newInstance();
-            }
-            return fragment;
-        }
-    }
-
-    class TestModelFactory implements ModelFactory {
-
-        @Override
-        public MainViewModel getModel(MainActivity owner) {
-            return new MainViewModelImpl() {
+            MainViewModel model = new MainViewModelImpl() {
                 @Override
-                public MutableLiveData<Fragment> getSwitchFramgmentMLD() {
-                    return switchFramgmentMLD;
-                }
-
-                @Override
-                public MutableLiveData<String> getUpdateTitleMLD() {
-                    return updateTitleMLD;
+                public void onActivityStart() {
+                    getSwitchFramgmentMLD().postValue(expectedFragment);
                 }
             };
-        }
+            MainActivity.setDependencyFactory(owner -> model);
+        });
+
+        // when
+        activityRule.launchActivity(null);
+
+        // then
+        onView(withId(R.id.machineryConnectFragment)).check(matches(isDisplayed()));
+
     }
+
 }
