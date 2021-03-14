@@ -1,12 +1,13 @@
 package wadosm.bluetooth.main;
 
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import wadosm.bluetooth.FragmentFactory;
+
 public class MainViewModel extends ViewModel implements PublicMainViewModel {
 
-    private final MutableLiveData<Fragment> switchFramgmentMLD = new MutableLiveData<>();
+    private final MutableLiveData<NewFragment> switchFramgmentMLD = new MutableLiveData<>();
 
     private final MutableLiveData<Integer> updateTitleMLD = new MutableLiveData<>();
 
@@ -19,7 +20,7 @@ public class MainViewModel extends ViewModel implements PublicMainViewModel {
     }
 
     @Override
-    public MutableLiveData<Fragment> getSwitchFramgmentMLD() {
+    public MutableLiveData<NewFragment> getSwitchFramgmentMLD() {
         return switchFramgmentMLD;
     }
 
@@ -39,7 +40,10 @@ public class MainViewModel extends ViewModel implements PublicMainViewModel {
             screenInitialized = true;
 
             getSwitchFramgmentMLD().postValue(
-                    fragmentFactory.getMachineryConnectFragment()
+                    new NewFragment(
+                            fragmentFactory.getMachineryConnectFragment(),
+                            false
+                    )
             );
         }
     }

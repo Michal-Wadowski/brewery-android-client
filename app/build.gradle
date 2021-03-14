@@ -26,6 +26,21 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    flavorDimensions "version"
+    productFlavors {
+        demo {
+            dimension "version"
+            applicationIdSuffix ".demo"
+            versionNameSuffix "-demo"
+        }
+
+        normal {
+            dimension "version"
+            applicationIdSuffix ".normal"
+            versionNameSuffix "-normal"
+        }
+    }
 }
 
 dependencies {
@@ -86,4 +101,9 @@ dependencies {
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.8.0'
 
 
+    compileOnly 'org.projectlombok:lombok:1.18.16'
+    annotationProcessor 'org.projectlombok:lombok:1.18.16'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.16'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
 }

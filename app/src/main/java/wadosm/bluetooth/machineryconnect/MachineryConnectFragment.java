@@ -11,8 +11,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import wadosm.bluetooth.R;
-import wadosm.bluetooth.main.MainActivity;
-import wadosm.bluetooth.main.PublicMainViewModel;
 
 public class MachineryConnectFragment extends Fragment {
 
@@ -38,22 +36,25 @@ public class MachineryConnectFragment extends Fragment {
 
         model.getMessagesBoxMLD().observe(getViewLifecycleOwner(), this::updateMessageBox);
 
-        connectButton.setOnClickListener(buttonView -> model.onConnectButton());
+        model.getConnectButtonEnableMLD().observe(getViewLifecycleOwner(), this::connectButtonEnable);
 
-        model.onFragmentInit(getMainActivityModel());
+        connectButton.setOnClickListener(buttonView -> model.onConnectButton(getContext()));
+
+        model.onFragmentInit(getContext());
 
         return currentView;
     }
 
-    private void updateMessageBox(Integer text) {
-        messagesBox.setText(text);
+    private void updateMessageBox(MessageBoxContent content) {
+        if (content.getStringId() != null) {
+            messagesBox.setText(content.getStringId());
+        } else if (content.getCustomText() != null) {
+            messagesBox.setText(content.getCustomText());
+        }
     }
 
-    public PublicMainViewModel getMainActivityModel() {
-        if (getActivity() instanceof MainActivity) {
-            return ((MainActivity) getActivity()).getModel();
-        } else
-            return null;
+    private void connectButtonEnable(Boolean enable) {
+        connectButton.setEnabled(enable);
     }
 
     public interface DependencyFactory {

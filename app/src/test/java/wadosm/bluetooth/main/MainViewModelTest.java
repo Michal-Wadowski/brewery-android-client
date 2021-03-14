@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import wadosm.bluetooth.machineryconnect.MachineryConnectFragment;
+import wadosm.bluetooth.FragmentFactory;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 public class MainViewModelTest {
 
     @Mock
-    MutableLiveData<Fragment> switchFramgmentMLD;
+    MutableLiveData<NewFragment> switchFramgmentMLD;
 
     @Mock
     FragmentFactory fragmentFactory;
@@ -27,7 +27,7 @@ public class MainViewModelTest {
     @Test
     public void should_start_MachineryConnectFragment_onActivityStart_if_no_other_screes() {
         // given
-        Fragment expectedFragment = MachineryConnectFragment.newInstance();
+        Fragment expectedFragment = new Fragment();
 
         when(fragmentFactory.getMachineryConnectFragment()).thenReturn(expectedFragment);
 
@@ -35,7 +35,7 @@ public class MainViewModelTest {
 
         MainViewModel model = new MainViewModel() {
             @Override
-            public MutableLiveData<Fragment> getSwitchFramgmentMLD() {
+            public MutableLiveData<NewFragment> getSwitchFramgmentMLD() {
                 return switchFramgmentMLD;
             }
         };
@@ -44,13 +44,15 @@ public class MainViewModelTest {
         model.onActivityStart();
 
         // then
-        verify(switchFramgmentMLD, times(1)).postValue(expectedFragment);
+        verify(switchFramgmentMLD, times(1)).postValue(
+                new NewFragment(expectedFragment, false)
+        );
     }
 
     @Test
     public void should_skip_MachineryConnectFragment_onActivityStart_if_there_is_some_screen() {
         // given
-        Fragment expectedFragment = MachineryConnectFragment.newInstance();
+        Fragment expectedFragment = new Fragment();
 
         when(fragmentFactory.getMachineryConnectFragment()).thenReturn(expectedFragment);
 
@@ -58,7 +60,7 @@ public class MainViewModelTest {
 
         MainViewModel model = new MainViewModel() {
             @Override
-            public MutableLiveData<Fragment> getSwitchFramgmentMLD() {
+            public MutableLiveData<NewFragment> getSwitchFramgmentMLD() {
                 return switchFramgmentMLD;
             }
         };
@@ -68,7 +70,9 @@ public class MainViewModelTest {
         model.onActivityStart();
 
         // then
-        verify(switchFramgmentMLD, times(1)).postValue(expectedFragment);
+        verify(switchFramgmentMLD, times(1)).postValue(
+                new NewFragment(expectedFragment, false)
+        );
     }
 
 }

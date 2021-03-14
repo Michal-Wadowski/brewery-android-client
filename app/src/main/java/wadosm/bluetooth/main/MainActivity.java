@@ -3,7 +3,7 @@ package wadosm.bluetooth.main;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import wadosm.bluetooth.R;
@@ -36,15 +36,27 @@ public class MainActivity extends AppCompatActivity implements MainViewModelGett
         return model;
     }
 
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            super.onBackPressed();
+        }
+    }
+
     public static void setDependencyFactory(DependencyFactory dependencyFactory) {
         MainActivity.dependencyFactory = dependencyFactory;
     }
 
-    private void setFragment(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction()
-                .setReorderingAllowed(true)
-                .add(R.id.fragment_container_view, fragment, null)
-                .commit();
+    private void setFragment(NewFragment newFragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        transaction.replace(R.id.fragmentContainerView, newFragment.getFragment());
+
+        if (newFragment.isAddToBackStack()) {
+            transaction.addToBackStack(null);
+        }
+
+        transaction.commit();
     }
 
     public interface DependencyFactory {

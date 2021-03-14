@@ -11,8 +11,7 @@
     <TextView
         android:id="@+id/machineryConnect_messagesBox"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/machineryConnect_deviceNotConnectedYet" />
+        android:layout_height="wrap_content" />
 
     <View
         android:layout_width="match_parent"
@@ -26,6 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:enabled="false"
         android:text="@string/machineryConnect_connectToDevice" />
 
 

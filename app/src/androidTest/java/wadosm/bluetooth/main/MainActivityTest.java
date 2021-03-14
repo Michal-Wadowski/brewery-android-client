@@ -2,6 +2,7 @@ package wadosm.bluetooth.main;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
+import androidx.test.espresso.Espresso;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
@@ -18,7 +19,6 @@ import wadosm.bluetooth.machineryconnect.MachineryConnectFragment;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -62,7 +62,7 @@ public class MainActivityTest {
             MainViewModel model = new MainViewModel() {
                 @Override
                 public void onActivityStart() {
-                    getSwitchFramgmentMLD().postValue(expectedFragment);
+                    getSwitchFramgmentMLD().postValue(new NewFragment(expectedFragment, false));
                 }
             };
             MainActivity.setDependencyFactory(owner -> model);
@@ -73,7 +73,27 @@ public class MainActivityTest {
 
         // then
         onView(ViewMatchers.withId(R.id.machineryConnectFragment)).check(matches(isDisplayed()));
-
     }
 
+    @Test
+    public void should_block_back_button_if_last_fragment() throws Throwable {
+        // given
+        MainViewModel modelMock = mock(MainViewModel.class);
+        when(modelMock.getUpdateTitleMLD()).thenReturn(new MutableLiveData<>());
+        when(modelMock.getSwitchFramgmentMLD()).thenReturn(new MutableLiveData<>());
+
+        MainActivity.setDependencyFactory(owner -> modelMock);
+
+        activityRule.launchActivity(null);
+
+        activityRule.runOnUiThread(() -> {
+            modelMock.getSwitchFramgmentMLD().postValue(new NewFragment(new Fragment(), true));
+        });
+
+        // when
+        Espresso.pressBack();
+
+        // then
+        onView(ViewMatchers.withId(R.id.fragmentContainerView)).check(matches(isDisplayed()));
+    }
 }
