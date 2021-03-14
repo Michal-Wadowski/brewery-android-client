@@ -7,6 +7,6 @@ public interface PublicMainViewModel {
 
     MutableLiveData<Fragment> getSwitchFramgmentMLD();
 
-    MutableLiveData<String> getUpdateTitleMLD();
+    MutableLiveData<Integer> getUpdateTitleMLD();
 
 }

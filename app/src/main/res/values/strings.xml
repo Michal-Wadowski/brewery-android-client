@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Bluetooth</string>
 
+    <string name="machineryConnect_connectToDevice">Connect to device</string>
+    <string name="machineryConnect_deviceNotConnectedYet">You\'re not connected to the device yet</string>
+    <string name="machineryConnect_connecting">Connecting...</string>
+
 </resources>

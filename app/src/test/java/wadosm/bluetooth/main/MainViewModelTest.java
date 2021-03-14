@@ -1,4 +1,4 @@
-package wadosm.bluetooth;
+package wadosm.bluetooth.main;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
@@ -9,8 +9,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import wadosm.bluetooth.machineryconnect.MachineryConnectFragment;
-import wadosm.bluetooth.main.FragmentFactory;
-import wadosm.bluetooth.main.MainViewModelImpl;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -18,7 +16,7 @@ import static org.mockito.Mockito.when;
 
 
 @RunWith(MockitoJUnitRunner.class)
-public class MainViewModelImplTest {
+public class MainViewModelTest {
 
     @Mock
     MutableLiveData<Fragment> switchFramgmentMLD;
@@ -33,9 +31,9 @@ public class MainViewModelImplTest {
 
         when(fragmentFactory.getMachineryConnectFragment()).thenReturn(expectedFragment);
 
-        MainViewModelImpl.setDependencyFactory(() -> fragmentFactory);
+        MainViewModel.setDependencyFactory(() -> fragmentFactory);
 
-        MainViewModelImpl model = new MainViewModelImpl() {
+        MainViewModel model = new MainViewModel() {
             @Override
             public MutableLiveData<Fragment> getSwitchFramgmentMLD() {
                 return switchFramgmentMLD;
@@ -43,6 +41,30 @@ public class MainViewModelImplTest {
         };
 
         // when
+        model.onActivityStart();
+
+        // then
+        verify(switchFramgmentMLD, times(1)).postValue(expectedFragment);
+    }
+
+    @Test
+    public void should_skip_MachineryConnectFragment_onActivityStart_if_there_is_some_screen() {
+        // given
+        Fragment expectedFragment = MachineryConnectFragment.newInstance();
+
+        when(fragmentFactory.getMachineryConnectFragment()).thenReturn(expectedFragment);
+
+        MainViewModel.setDependencyFactory(() -> fragmentFactory);
+
+        MainViewModel model = new MainViewModel() {
+            @Override
+            public MutableLiveData<Fragment> getSwitchFramgmentMLD() {
+                return switchFramgmentMLD;
+            }
+        };
+
+        // when
+        model.onActivityStart();
         model.onActivityStart();
 
         // then

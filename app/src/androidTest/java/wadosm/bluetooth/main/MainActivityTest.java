@@ -1,7 +1,8 @@
-package wadosm.bluetooth;
+package wadosm.bluetooth.main;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
@@ -11,10 +12,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 
+import wadosm.bluetooth.R;
 import wadosm.bluetooth.machineryconnect.MachineryConnectFragment;
-import wadosm.bluetooth.main.MainActivity;
-import wadosm.bluetooth.main.MainViewModel;
-import wadosm.bluetooth.main.MainViewModelImpl;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -60,7 +59,7 @@ public class MainActivityTest {
         activityRule.runOnUiThread(() -> {
             Fragment expectedFragment = MachineryConnectFragment.newInstance();
 
-            MainViewModel model = new MainViewModelImpl() {
+            MainViewModel model = new MainViewModel() {
                 @Override
                 public void onActivityStart() {
                     getSwitchFramgmentMLD().postValue(expectedFragment);
@@ -73,7 +72,7 @@ public class MainActivityTest {
         activityRule.launchActivity(null);
 
         // then
-        onView(withId(R.id.machineryConnectFragment)).check(matches(isDisplayed()));
+        onView(ViewMatchers.withId(R.id.machineryConnectFragment)).check(matches(isDisplayed()));
 
     }
 

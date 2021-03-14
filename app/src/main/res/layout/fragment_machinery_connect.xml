@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/machineryConnectFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/machineryConnectFragment"
+    android:orientation="vertical"
+    android:padding="20dp"
     tools:context=".machineryconnect.MachineryConnectFragment">
 
     <TextView
+        android:id="@+id/machineryConnect_messagesBox"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Hello blank fragment" />
+        android:layout_height="wrap_content"
+        android:text="@string/machineryConnect_deviceNotConnectedYet" />
 
-</FrameLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+    </View>
+
+    <Button
+        android:id="@+id/machineryConnect_connectButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:text="@string/machineryConnect_connectToDevice" />
+
+
+</LinearLayout>

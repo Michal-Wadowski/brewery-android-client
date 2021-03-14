@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements MainViewModelGett
     public static class DefaulDependencyFactory implements DependencyFactory {
         @Override
         public MainViewModel getModel(MainActivity owner) {
-            return new ViewModelProvider(owner).get(MainViewModelImpl.class);
+            return new ViewModelProvider(owner).get(MainViewModel.class);
         }
     }
 }
