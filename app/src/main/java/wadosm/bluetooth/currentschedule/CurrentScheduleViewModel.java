@@ -4,7 +4,9 @@ import android.content.Context;
 
 import androidx.lifecycle.ViewModel;
 
-public class CurrentScheduleViewModel extends ViewModel {
+import wadosm.bluetooth.common.AbstractViewModel;
+
+public class CurrentScheduleViewModel extends AbstractViewModel {
 
     private static DependencyFactory dependencyFactory = new DependencyFactory();
 

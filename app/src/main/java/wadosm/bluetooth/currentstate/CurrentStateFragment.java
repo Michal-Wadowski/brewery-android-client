@@ -24,8 +24,6 @@ public class CurrentStateFragment extends Fragment {
 
     private static DependencyFactory dependencyFactory = new DependencyFactory();
 
-    private CurrentStateViewModel model;
-
     public static DependencyFactory getDependencyFactory() {
         return dependencyFactory;
     }
@@ -42,7 +40,7 @@ public class CurrentStateFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View currentView = inflater.inflate(R.layout.fragment_current_state, container, false);
 
-        model = getDependencyFactory().getModel(this);
+        CurrentStateViewModel model = getDependencyFactory().getModel(this);
 
         model.onFragmentInit(getContext());
 

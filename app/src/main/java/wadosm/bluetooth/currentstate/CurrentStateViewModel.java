@@ -4,12 +4,14 @@ import android.content.Context;
 
 import androidx.lifecycle.ViewModel;
 
-public class CurrentStateViewModel extends ViewModel {
+import wadosm.bluetooth.common.AbstractViewModel;
+
+public class CurrentStateViewModel extends AbstractViewModel {
 
     private static DependencyFactory dependencyFactory = new DependencyFactory();
 
+    @Override
     public void onFragmentInit(Context context) {
-
     }
 
     public static DependencyFactory getDependencyFactory() {

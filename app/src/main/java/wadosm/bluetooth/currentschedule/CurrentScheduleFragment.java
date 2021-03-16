@@ -22,8 +22,6 @@ public class CurrentScheduleFragment extends Fragment {
 
     private static DependencyFactory dependencyFactory = new DependencyFactory();
 
-    private CurrentScheduleViewModel model;
-
     private RecyclerView currentScheduleRecyler;
 
     private RecyclerView.Adapter currentScheduleAdapter;
@@ -60,7 +58,7 @@ public class CurrentScheduleFragment extends Fragment {
         manager.replace(R.id.stateContainer, CurrentStateFragment.newInstance());
         manager.commit();
 
-        model = getDependencyFactory().getModel(this);
+        CurrentScheduleViewModel model = getDependencyFactory().getModel(this);
 
         model.onFragmentInit(getContext());
 
