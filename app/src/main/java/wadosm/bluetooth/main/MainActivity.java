@@ -11,16 +11,16 @@ import wadosm.bluetooth.R;
 
 public class MainActivity extends AppCompatActivity implements MainViewModelGetter {
 
-    static DependencyFactory dependencyFactory = new DefaulDependencyFactory();
+    private static DependencyFactory dependencyFactory = new DependencyFactory();
 
-    MainViewModel model;
+    private MainViewModel model;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        model = dependencyFactory.getModel(this);
+        model = getDependencyFactory().getModel(this);
 
         model.getSwitchFramgmentMLD().observe(this, this::setFragment);
 
@@ -47,7 +47,11 @@ public class MainActivity extends AppCompatActivity implements MainViewModelGett
         MainActivity.dependencyFactory = dependencyFactory;
     }
 
-    private void setFragment(NewFragment newFragment) {
+    public static DependencyFactory getDependencyFactory() {
+        return dependencyFactory;
+    }
+
+    private void setFragment(NewFragmentVDO newFragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         transaction.replace(R.id.fragmentContainerView, newFragment.getFragment());
@@ -59,12 +63,7 @@ public class MainActivity extends AppCompatActivity implements MainViewModelGett
         transaction.commit();
     }
 
-    public interface DependencyFactory {
-        MainViewModel getModel(MainActivity owner);
-    }
-
-    public static class DefaulDependencyFactory implements DependencyFactory {
-        @Override
+    public static class DependencyFactory {
         public MainViewModel getModel(MainActivity owner) {
             return new ViewModelProvider(owner).get(MainViewModel.class);
         }

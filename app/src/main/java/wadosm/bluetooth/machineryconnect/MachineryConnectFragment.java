@@ -14,15 +14,21 @@ import wadosm.bluetooth.R;
 
 public class MachineryConnectFragment extends Fragment {
 
-    static DependencyFactory dependencyFactory = new DefaulDependencyFactory();
+    private static DependencyFactory dependencyFactory = new DependencyFactory();
 
-    MachineryConnectViewModel model;
-
-    TextView messagesBox;
-    Button connectButton;
+    private TextView messagesBox;
+    private Button connectButton;
 
     public static MachineryConnectFragment newInstance() {
         return new MachineryConnectFragment();
+    }
+
+    public static DependencyFactory getDependencyFactory() {
+        return dependencyFactory;
+    }
+
+    public static void setDependencyFactory(DependencyFactory dependencyFactory) {
+        MachineryConnectFragment.dependencyFactory = dependencyFactory;
     }
 
     @Override
@@ -32,11 +38,9 @@ public class MachineryConnectFragment extends Fragment {
         messagesBox = currentView.findViewById(R.id.machineryConnect_messagesBox);
         connectButton = currentView.findViewById(R.id.machineryConnect_connectButton);
 
-        model = dependencyFactory.getModel(this);
+        MachineryConnectViewModel model = getDependencyFactory().getModel(this);
 
-        model.getMessagesBoxMLD().observe(getViewLifecycleOwner(), this::updateMessageBox);
-
-        model.getConnectButtonEnableMLD().observe(getViewLifecycleOwner(), this::connectButtonEnable);
+        model.getMachineryConnectMLD().observe(getViewLifecycleOwner(), this::updateMachineryConnectView);
 
         connectButton.setOnClickListener(buttonView -> model.onConnectButton(getContext()));
 
@@ -45,24 +49,16 @@ public class MachineryConnectFragment extends Fragment {
         return currentView;
     }
 
-    private void updateMessageBox(MessageBoxContent content) {
-        if (content.getStringId() != null) {
-            messagesBox.setText(content.getStringId());
-        } else if (content.getCustomText() != null) {
-            messagesBox.setText(content.getCustomText());
+    private void updateMachineryConnectView(MachineryConnectVDO content) {
+        if (content.getMessageBox().getStringId() != null) {
+            messagesBox.setText(content.getMessageBox().getStringId());
+        } else if (content.getMessageBox().getCustomText() != null) {
+            messagesBox.setText(content.getMessageBox().getCustomText());
         }
+        connectButton.setEnabled(content.isConnectButtonEnable());
     }
 
-    private void connectButtonEnable(Boolean enable) {
-        connectButton.setEnabled(enable);
-    }
-
-    public interface DependencyFactory {
-        MachineryConnectViewModel getModel(MachineryConnectFragment owner);
-    }
-
-    public static class DefaulDependencyFactory implements DependencyFactory {
-        @Override
+    public static class DependencyFactory {
         public MachineryConnectViewModel getModel(MachineryConnectFragment owner) {
             return new ViewModelProvider(owner).get(MachineryConnectViewModel.class);
         }

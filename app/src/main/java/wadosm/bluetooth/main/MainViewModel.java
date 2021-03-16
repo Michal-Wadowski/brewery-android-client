@@ -7,20 +7,16 @@ import wadosm.bluetooth.FragmentFactory;
 
 public class MainViewModel extends ViewModel implements PublicMainViewModel {
 
-    private final MutableLiveData<NewFragment> switchFramgmentMLD = new MutableLiveData<>();
+    private final MutableLiveData<NewFragmentVDO> switchFramgmentMLD = new MutableLiveData<>();
 
     private final MutableLiveData<Integer> updateTitleMLD = new MutableLiveData<>();
 
-    static DependencyFactory dependencyFactory = new DefaulDependencyFactory();
+    private static DependencyFactory dependencyFactory = new DependencyFactory();
 
-    private final FragmentFactory fragmentFactory;
-
-    public MainViewModel() {
-        fragmentFactory = dependencyFactory.getFragmentFactory();
-    }
+    private boolean screenInitialized = false;
 
     @Override
-    public MutableLiveData<NewFragment> getSwitchFramgmentMLD() {
+    public MutableLiveData<NewFragmentVDO> getSwitchFramgmentMLD() {
         return switchFramgmentMLD;
     }
 
@@ -33,27 +29,24 @@ public class MainViewModel extends ViewModel implements PublicMainViewModel {
         MainViewModel.dependencyFactory = dependencyFactory;
     }
 
-    private boolean screenInitialized = false;
+    public static DependencyFactory getDependencyFactory() {
+        return dependencyFactory;
+    }
 
     public void onActivityStart() {
         if (!screenInitialized) {
             screenInitialized = true;
 
             getSwitchFramgmentMLD().postValue(
-                    new NewFragment(
-                            fragmentFactory.getMachineryConnectFragment(),
+                    new NewFragmentVDO(
+                            getDependencyFactory().getFragmentFactory().getMachineryConnectFragment(),
                             false
                     )
             );
         }
     }
 
-    public interface DependencyFactory {
-        FragmentFactory getFragmentFactory();
-    }
-
-    public static class DefaulDependencyFactory implements DependencyFactory {
-        @Override
+    public static class DependencyFactory {
         public FragmentFactory getFragmentFactory() {
             return new FragmentFactory();
         }

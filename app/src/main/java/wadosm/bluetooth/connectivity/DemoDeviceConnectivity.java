@@ -1,5 +1,8 @@
 package wadosm.bluetooth.connectivity;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import java.util.function.Consumer;
 
 public class DemoDeviceConnectivity implements DeviceConnectivity {
@@ -18,7 +21,9 @@ public class DemoDeviceConnectivity implements DeviceConnectivity {
 
     @Override
     public void connect(Runnable onConnected, Consumer<String> onError) {
-        connected = true;
-        onConnected.run();
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            connected = true;
+            onConnected.run();
+        }, 1000);
     }
 }

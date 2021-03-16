@@ -22,7 +22,7 @@ import wadosm.bluetooth.R;
 import wadosm.bluetooth.connectivity.DeviceConnectivity;
 import wadosm.bluetooth.connectivity.DeviceService;
 import wadosm.bluetooth.main.MainActivity;
-import wadosm.bluetooth.main.NewFragment;
+import wadosm.bluetooth.main.NewFragmentVDO;
 import wadosm.bluetooth.main.PublicMainViewModel;
 
 import static org.mockito.ArgumentMatchers.notNull;
@@ -44,10 +44,7 @@ public class MachineryConnectViewModelTest extends TestCase {
     private MutableLiveData<Integer> updateTitleMLD;
 
     @Mock
-    private MutableLiveData<MessageBoxContent> messagesBoxMLD;
-
-    @Mock
-    MutableLiveData<Boolean> connectButtonEnableMLD;
+    private MutableLiveData<MachineryConnectVDO> machineryConnectVDO;
 
     @Mock
     private MachineryConnectViewModel.DependencyFactory dependencyFactory;
@@ -56,7 +53,7 @@ public class MachineryConnectViewModelTest extends TestCase {
     private DeviceConnectivity deviceConnectivity;
 
     @Mock
-    MutableLiveData<NewFragment> switchFramgmentMLD;
+    MutableLiveData<NewFragmentVDO> switchFramgmentMLD;
 
     Consumer<String> onErrorCallback;
 
@@ -83,7 +80,7 @@ public class MachineryConnectViewModelTest extends TestCase {
     }
 
     @Test
-    public void should_set_notConnected_onActivityStart() {
+    public void should_set_notConnected_and_enable_button_onActivityStart() {
         // given
         MachineryConnectViewModel model = getModelWithMLDMocked();
 
@@ -91,19 +88,12 @@ public class MachineryConnectViewModelTest extends TestCase {
         model.onFragmentInit(getMainActivityStub());
 
         // then
-        verify(model.getMessagesBoxMLD(), times(1)).postValue(new MessageBoxContent(R.string.machineryConnect_deviceNotConnectedYet));
-    }
-
-    @Test
-    public void should_enable_button_onActivityStart() {
-        // given
-        MachineryConnectViewModel model = getModelWithMLDMocked();
-
-        // when
-        model.onFragmentInit(getMainActivityStub());
-
-        // then
-        verify(model.getConnectButtonEnableMLD(), times(1)).postValue(true);
+        verify(model.getMachineryConnectMLD(), times(1)).postValue(
+                new MachineryConnectVDO(
+                        new MessageBoxVDO(R.string.machineryConnect_deviceNotConnectedYet),
+                        true
+                )
+        );
     }
 
     @Test
@@ -121,7 +111,7 @@ public class MachineryConnectViewModelTest extends TestCase {
     }
 
     @Test
-    public void should_set_connecting_text_onConnectButton() {
+    public void should_set_connecting_text_disable_button_onConnectButton() {
         // given
         MachineryConnectViewModel model = getModelWithMLDMocked();
 
@@ -129,23 +119,16 @@ public class MachineryConnectViewModelTest extends TestCase {
         model.onConnectButton(null);
 
         // then
-        verify(model.getMessagesBoxMLD(), times(1)).postValue(new MessageBoxContent(R.string.machineryConnect_connecting));
+        verify(model.getMachineryConnectMLD(), times(1)).postValue(
+                new MachineryConnectVDO(
+                        new MessageBoxVDO(R.string.machineryConnect_connecting),
+                        false
+                )
+        );
     }
 
     @Test
-    public void should_disable_button_onConnectButton() {
-        // given
-        MachineryConnectViewModel model = getModelWithMLDMocked();
-
-        // when
-        model.onConnectButton(null);
-
-        // then
-        verify(model.getConnectButtonEnableMLD(), times(1)).postValue(false);
-    }
-
-    @Test
-    public void should_enable_button_on_fail() {
+    public void should_enable_button_and_show_error_text_on_fail() {
         // given
         MachineryConnectViewModel model = getModelWithMLDMocked();
 
@@ -157,23 +140,12 @@ public class MachineryConnectViewModelTest extends TestCase {
         onErrorCallback.accept("Error message");
 
         // then
-        verify(model.getConnectButtonEnableMLD(), times(1)).postValue(true);
-    }
-
-    @Test
-    public void should_show_error_text_on_fail() {
-        // given
-        MachineryConnectViewModel model = getModelWithMLDMocked();
-
-        onErrorCallback = null;
-
-        model.onConnectButton(null);
-
-        // when
-        onErrorCallback.accept("Error message");
-
-        // then
-        verify(model.getMessagesBoxMLD(), times(1)).postValue(new MessageBoxContent("Error message"));
+        verify(model.getMachineryConnectMLD(), times(1)).postValue(
+                new MachineryConnectVDO(
+                        new MessageBoxVDO("Error message"),
+                        true
+                )
+        );
     }
 
     @Test
@@ -200,7 +172,7 @@ public class MachineryConnectViewModelTest extends TestCase {
         onConnectedCallback.run();
 
         // then
-        verify(switchFramgmentMLD).postValue(new NewFragment(expectedFragment, false));
+        verify(switchFramgmentMLD).postValue(new NewFragmentVDO(expectedFragment, false));
     }
 
     private Context getMainActivityStub() {
@@ -232,13 +204,8 @@ public class MachineryConnectViewModelTest extends TestCase {
     private MachineryConnectViewModel getModelWithMLDMocked() {
         return new MachineryConnectViewModel() {
             @Override
-            public MutableLiveData<Boolean> getConnectButtonEnableMLD() {
-                return connectButtonEnableMLD;
-            }
-
-            @Override
-            public MutableLiveData<MessageBoxContent> getMessagesBoxMLD() {
-                return messagesBoxMLD;
+            public MutableLiveData<MachineryConnectVDO> getMachineryConnectMLD() {
+                return machineryConnectVDO;
             }
         };
     }

@@ -19,7 +19,10 @@ import static org.mockito.Mockito.when;
 public class MainViewModelTest {
 
     @Mock
-    MutableLiveData<NewFragment> switchFramgmentMLD;
+    MutableLiveData<NewFragmentVDO> switchFramgmentMLD;
+
+    @Mock
+    MainViewModel.DependencyFactory dependencyFactory;
 
     @Mock
     FragmentFactory fragmentFactory;
@@ -30,12 +33,12 @@ public class MainViewModelTest {
         Fragment expectedFragment = new Fragment();
 
         when(fragmentFactory.getMachineryConnectFragment()).thenReturn(expectedFragment);
-
-        MainViewModel.setDependencyFactory(() -> fragmentFactory);
+        when(dependencyFactory.getFragmentFactory()).thenReturn(fragmentFactory);
+        MainViewModel.setDependencyFactory(dependencyFactory);
 
         MainViewModel model = new MainViewModel() {
             @Override
-            public MutableLiveData<NewFragment> getSwitchFramgmentMLD() {
+            public MutableLiveData<NewFragmentVDO> getSwitchFramgmentMLD() {
                 return switchFramgmentMLD;
             }
         };
@@ -45,7 +48,7 @@ public class MainViewModelTest {
 
         // then
         verify(switchFramgmentMLD, times(1)).postValue(
-                new NewFragment(expectedFragment, false)
+                new NewFragmentVDO(expectedFragment, false)
         );
     }
 
@@ -55,12 +58,12 @@ public class MainViewModelTest {
         Fragment expectedFragment = new Fragment();
 
         when(fragmentFactory.getMachineryConnectFragment()).thenReturn(expectedFragment);
-
-        MainViewModel.setDependencyFactory(() -> fragmentFactory);
+        when(dependencyFactory.getFragmentFactory()).thenReturn(fragmentFactory);
+        MainViewModel.setDependencyFactory(dependencyFactory);
 
         MainViewModel model = new MainViewModel() {
             @Override
-            public MutableLiveData<NewFragment> getSwitchFramgmentMLD() {
+            public MutableLiveData<NewFragmentVDO> getSwitchFramgmentMLD() {
                 return switchFramgmentMLD;
             }
         };
@@ -71,7 +74,7 @@ public class MainViewModelTest {
 
         // then
         verify(switchFramgmentMLD, times(1)).postValue(
-                new NewFragment(expectedFragment, false)
+                new NewFragmentVDO(expectedFragment, false)
         );
     }
 

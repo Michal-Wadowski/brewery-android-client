@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData;
 
 public interface PublicMainViewModel {
 
-    MutableLiveData<NewFragment> getSwitchFramgmentMLD();
+    MutableLiveData<NewFragmentVDO> getSwitchFramgmentMLD();
 
     MutableLiveData<Integer> getUpdateTitleMLD();
 

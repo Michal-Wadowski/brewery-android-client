@@ -9,10 +9,10 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 @EqualsAndHashCode
-public class NewFragment {
+public class NewFragmentVDO {
 
-    private Fragment fragment;
+    private final Fragment fragment;
 
-    private boolean addToBackStack;
+    private final boolean addToBackStack;
 
 }

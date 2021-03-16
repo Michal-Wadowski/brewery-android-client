@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import wadosm.bluetooth.R;
@@ -19,6 +20,7 @@ import wadosm.bluetooth.machineryconnect.MachineryConnectFragment;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -30,6 +32,14 @@ public class MainActivityTest {
     @Rule
     public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(MainActivity.class, true, false);
 
+    @Mock
+    private MutableLiveData<Integer> updateTitleMLD;
+
+    @Mock
+    private MutableLiveData<NewFragmentVDO> switchFramgmentMLD;
+
+    @Mock
+    public MainActivity.DependencyFactory dependencyFactory;
 
     @Before
     public void setUp() {
@@ -39,11 +49,9 @@ public class MainActivityTest {
     @Test
     public void should_call_model_onActivityStart_after_start() throws Throwable {
         // given
-        MainViewModel modelMock = mock(MainViewModel.class);
-        when(modelMock.getUpdateTitleMLD()).thenReturn(new MutableLiveData<>());
-        when(modelMock.getSwitchFramgmentMLD()).thenReturn(new MutableLiveData<>());
+        MainViewModel modelMock = getModelMock();
 
-        MainActivity.setDependencyFactory(owner -> modelMock);
+        setDependencyFactory(modelMock);
 
         // when
         activityRule.launchActivity(null);
@@ -62,10 +70,11 @@ public class MainActivityTest {
             MainViewModel model = new MainViewModel() {
                 @Override
                 public void onActivityStart() {
-                    getSwitchFramgmentMLD().postValue(new NewFragment(expectedFragment, false));
+                    getSwitchFramgmentMLD().postValue(new NewFragmentVDO(expectedFragment, false));
                 }
             };
-            MainActivity.setDependencyFactory(owner -> model);
+
+            setDependencyFactory(model);
         });
 
         // when
@@ -78,16 +87,14 @@ public class MainActivityTest {
     @Test
     public void should_block_back_button_if_last_fragment() throws Throwable {
         // given
-        MainViewModel modelMock = mock(MainViewModel.class);
-        when(modelMock.getUpdateTitleMLD()).thenReturn(new MutableLiveData<>());
-        when(modelMock.getSwitchFramgmentMLD()).thenReturn(new MutableLiveData<>());
+        MainViewModel modelMock = getModelMock();
 
-        MainActivity.setDependencyFactory(owner -> modelMock);
+        setDependencyFactory(modelMock);
 
         activityRule.launchActivity(null);
 
         activityRule.runOnUiThread(() -> {
-            modelMock.getSwitchFramgmentMLD().postValue(new NewFragment(new Fragment(), true));
+            modelMock.getSwitchFramgmentMLD().postValue(new NewFragmentVDO(new Fragment(), true));
         });
 
         // when
@@ -95,5 +102,17 @@ public class MainActivityTest {
 
         // then
         onView(ViewMatchers.withId(R.id.fragmentContainerView)).check(matches(isDisplayed()));
+    }
+
+    private void setDependencyFactory(MainViewModel modelMock) {
+        when(dependencyFactory.getModel(any())).thenReturn(modelMock);
+        MainActivity.setDependencyFactory(dependencyFactory);
+    }
+
+    private MainViewModel getModelMock() {
+        MainViewModel modelMock = mock(MainViewModel.class);
+        when(modelMock.getUpdateTitleMLD()).thenReturn(updateTitleMLD);
+        when(modelMock.getSwitchFramgmentMLD()).thenReturn(switchFramgmentMLD);
+        return modelMock;
     }
 }

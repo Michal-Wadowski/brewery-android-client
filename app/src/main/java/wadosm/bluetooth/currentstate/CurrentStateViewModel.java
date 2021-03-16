@@ -1,16 +1,12 @@
-package wadosm.bluetooth.currentschedule;
+package wadosm.bluetooth.currentstate;
 
 import android.content.Context;
 
 import androidx.lifecycle.ViewModel;
 
-public class CurrentScheduleViewModel extends ViewModel {
+public class CurrentStateViewModel extends ViewModel {
 
     private static DependencyFactory dependencyFactory = new DependencyFactory();
-
-    public CurrentScheduleViewModel() {
-
-    }
 
     public void onFragmentInit(Context context) {
 
@@ -21,7 +17,7 @@ public class CurrentScheduleViewModel extends ViewModel {
     }
 
     public static void setDependencyFactory(DependencyFactory dependencyFactory) {
-        CurrentScheduleViewModel.dependencyFactory = dependencyFactory;
+        CurrentStateViewModel.dependencyFactory = dependencyFactory;
     }
 
     public static class DependencyFactory {

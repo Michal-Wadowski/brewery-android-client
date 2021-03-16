@@ -12,29 +12,21 @@ import wadosm.bluetooth.R;
 import wadosm.bluetooth.connectivity.DeviceConnectivity;
 import wadosm.bluetooth.connectivity.DeviceConnectivityFactory;
 import wadosm.bluetooth.main.MainActivity;
-import wadosm.bluetooth.main.NewFragment;
+import wadosm.bluetooth.main.NewFragmentVDO;
 import wadosm.bluetooth.main.PublicMainViewModel;
 
 public class MachineryConnectViewModel extends ViewModel {
 
-    static DependencyFactory dependencyFactory = new DefaulDependencyFactory();
+    private static DependencyFactory dependencyFactory = new DependencyFactory();
 
-    private final FragmentFactory fragmentFactory;
+    private final MutableLiveData<MachineryConnectVDO> machineryConnectMLD = new MutableLiveData<>();
 
-    private final MutableLiveData<MessageBoxContent> messagesBoxMLD = new MutableLiveData<>();
-
-    private final MutableLiveData<Boolean> connectButtonEnableMLD = new MutableLiveData<>();
-
-    public MachineryConnectViewModel() {
-        fragmentFactory = dependencyFactory.getFragmentFactory();
+    public MutableLiveData<MachineryConnectVDO> getMachineryConnectMLD() {
+        return machineryConnectMLD;
     }
 
-    public MutableLiveData<MessageBoxContent> getMessagesBoxMLD() {
-        return messagesBoxMLD;
-    }
-
-    public MutableLiveData<Boolean> getConnectButtonEnableMLD() {
-        return connectButtonEnableMLD;
+    public static DependencyFactory getDependencyFactory() {
+        return dependencyFactory;
     }
 
     public static void setDependencyFactory(DependencyFactory dependencyFactory) {
@@ -44,56 +36,53 @@ public class MachineryConnectViewModel extends ViewModel {
     public void onFragmentInit(Context context) {
         PublicMainViewModel mainViewModel = getMainActivityModel(context);
         mainViewModel.getUpdateTitleMLD().postValue(R.string.machineryConnect_connectToDevice);
-        getMessagesBoxMLD().postValue(new MessageBoxContent(R.string.machineryConnect_deviceNotConnectedYet));
-        getConnectButtonEnableMLD().postValue(true);
+
+        getMachineryConnectMLD().postValue(new MachineryConnectVDO(
+                new MessageBoxVDO(R.string.machineryConnect_deviceNotConnectedYet),
+                true
+        ));
     }
 
     private PublicMainViewModel getMainActivityModel(Context context) {
         if (context instanceof MainActivity) {
             return ((MainActivity) context).getModel();
         } else
-            return null;
+            throw new RuntimeException("MainActivity expected");
     }
 
     public void onConnectButton(Context context) {
-        getMessagesBoxMLD().postValue(new MessageBoxContent(R.string.machineryConnect_connecting));
-        getConnectButtonEnableMLD().postValue(false);
-        dependencyFactory.getDeviceConnectivity().connect(
+        getMachineryConnectMLD().postValue(new MachineryConnectVDO(
+                new MessageBoxVDO(R.string.machineryConnect_connecting),
+                false
+        ));
+
+        getDependencyFactory().getDeviceConnectivity().connect(
                 getConnectionSuccessCallback(context),
                 getConnectionFailCallback()
         );
     }
 
     private Consumer<String> getConnectionFailCallback() {
-        return errorMessage -> {
-            getConnectButtonEnableMLD().postValue(true);
-            getMessagesBoxMLD().postValue(new MessageBoxContent(errorMessage));
-        };
+        return errorMessage -> getMachineryConnectMLD().postValue(new MachineryConnectVDO(
+                new MessageBoxVDO(errorMessage),
+                true
+        ));
     }
 
     private Runnable getConnectionSuccessCallback(Context context) {
         return () -> getMainActivityModel(context).getSwitchFramgmentMLD().postValue(
-                new NewFragment(
-                        fragmentFactory.getCurrentScheduleFragment(),
+                new NewFragmentVDO(
+                        getDependencyFactory().getFragmentFactory().getCurrentScheduleFragment(),
                         false
                 )
         );
     }
 
-    public interface DependencyFactory {
-        FragmentFactory getFragmentFactory();
-
-        DeviceConnectivity getDeviceConnectivity();
-    }
-
-    public static class DefaulDependencyFactory implements DependencyFactory {
-
-        @Override
+    public static class DependencyFactory {
         public FragmentFactory getFragmentFactory() {
             return new FragmentFactory();
         }
 
-        @Override
         public DeviceConnectivity getDeviceConnectivity() {
             return DeviceConnectivityFactory.getInstance();
         }

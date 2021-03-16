@@ -5,17 +5,17 @@ import lombok.Getter;
 
 @Getter
 @EqualsAndHashCode
-public class MessageBoxContent {
+public class MessageBoxVDO {
 
     private Integer stringId;
 
     private String customText;
 
-    public MessageBoxContent(Integer stringId) {
+    public MessageBoxVDO(Integer stringId) {
         this.stringId = stringId;
     }
 
-    public MessageBoxContent(String customText) {
+    public MessageBoxVDO(String customText) {
         this.customText = customText;
     }
 }
