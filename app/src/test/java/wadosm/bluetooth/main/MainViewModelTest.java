@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import wadosm.bluetooth.FragmentFactory;
+import wadosm.bluetooth.dependency.FragmentFactoryImpl;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -22,10 +22,7 @@ public class MainViewModelTest {
     MutableLiveData<NewFragmentVDO> switchFramgmentMLD;
 
     @Mock
-    MainViewModel.DependencyFactory dependencyFactory;
-
-    @Mock
-    FragmentFactory fragmentFactory;
+    FragmentFactoryImpl fragmentFactory;
 
     @Test
     public void should_start_MachineryConnectFragment_onActivityStart_if_no_other_screes() {
@@ -33,10 +30,8 @@ public class MainViewModelTest {
         Fragment expectedFragment = new Fragment();
 
         when(fragmentFactory.getMachineryConnectFragment()).thenReturn(expectedFragment);
-        when(dependencyFactory.getFragmentFactory()).thenReturn(fragmentFactory);
-        MainViewModel.setDependencyFactory(dependencyFactory);
 
-        MainViewModel model = new MainViewModel() {
+        MainViewModel model = new MainViewModel(fragmentFactory) {
             @Override
             public MutableLiveData<NewFragmentVDO> getSwitchFramgmentMLD() {
                 return switchFramgmentMLD;
@@ -58,10 +53,8 @@ public class MainViewModelTest {
         Fragment expectedFragment = new Fragment();
 
         when(fragmentFactory.getMachineryConnectFragment()).thenReturn(expectedFragment);
-        when(dependencyFactory.getFragmentFactory()).thenReturn(fragmentFactory);
-        MainViewModel.setDependencyFactory(dependencyFactory);
 
-        MainViewModel model = new MainViewModel() {
+        MainViewModel model = new MainViewModel(fragmentFactory) {
             @Override
             public MutableLiveData<NewFragmentVDO> getSwitchFramgmentMLD() {
                 return switchFramgmentMLD;

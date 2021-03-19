@@ -2,8 +2,6 @@ package wadosm.bluetooth.currentstate;
 
 import android.content.Context;
 
-import androidx.lifecycle.ViewModel;
-
 import wadosm.bluetooth.common.AbstractViewModel;
 
 public class CurrentStateViewModel extends AbstractViewModel {

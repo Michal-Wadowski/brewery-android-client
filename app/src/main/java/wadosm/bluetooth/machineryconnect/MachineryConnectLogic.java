@@ -4,10 +4,10 @@ import android.content.Context;
 
 import java.util.function.Consumer;
 
-import wadosm.bluetooth.FragmentFactory;
 import wadosm.bluetooth.R;
 import wadosm.bluetooth.connectivity.DeviceConnectivity;
 import wadosm.bluetooth.connectivity.DeviceConnectivityFactory;
+import wadosm.bluetooth.dependency.FragmentFactoryImpl;
 import wadosm.bluetooth.main.NewFragmentVDO;
 
 public class MachineryConnectLogic {
@@ -67,8 +67,8 @@ public class MachineryConnectLogic {
     }
 
     public static class DependencyFactory {
-        public FragmentFactory getFragmentFactory() {
-            return new FragmentFactory();
+        public FragmentFactoryImpl getFragmentFactory() {
+            return new FragmentFactoryImpl();
         }
 
         public DeviceConnectivity getDeviceConnectivity() {

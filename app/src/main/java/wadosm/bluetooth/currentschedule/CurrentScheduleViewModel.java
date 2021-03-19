@@ -2,8 +2,6 @@ package wadosm.bluetooth.currentschedule;
 
 import android.content.Context;
 
-import androidx.lifecycle.ViewModel;
-
 import wadosm.bluetooth.common.AbstractViewModel;
 
 public class CurrentScheduleViewModel extends AbstractViewModel {

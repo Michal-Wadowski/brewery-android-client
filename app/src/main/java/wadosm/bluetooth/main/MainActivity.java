@@ -4,31 +4,37 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProvider;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import wadosm.bluetooth.R;
+import wadosm.bluetooth.dependency.ViewModelProviderFactory;
 
-
+@AndroidEntryPoint
 public class MainActivity extends AppCompatActivity implements MainViewModelGetter {
 
-    private static DependencyFactory dependencyFactory = new DependencyFactory();
-
     private MainViewModel model;
+
+    @Inject
+    protected ViewModelProviderFactory viewModelProviderFactory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        model = getDependencyFactory().getModel(this);
+        model = buildViewModel();
 
         model.getSwitchFramgmentMLD().observe(this, this::setFragment);
 
         model.getUpdateTitleMLD().observe(this, this::setTitle);
 
-        if (savedInstanceState == null) {
-            model.onActivityStart();
-        }
+        model.onActivityStart();
+    }
+
+    public MainViewModel buildViewModel() {
+        return viewModelProviderFactory.getViewModelProvider(this).get(MainViewModel.class);
     }
 
     @Override
@@ -43,14 +49,6 @@ public class MainActivity extends AppCompatActivity implements MainViewModelGett
         }
     }
 
-    public static void setDependencyFactory(DependencyFactory dependencyFactory) {
-        MainActivity.dependencyFactory = dependencyFactory;
-    }
-
-    public static DependencyFactory getDependencyFactory() {
-        return dependencyFactory;
-    }
-
     private void setFragment(NewFragmentVDO newFragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
@@ -61,11 +59,5 @@ public class MainActivity extends AppCompatActivity implements MainViewModelGett
         }
 
         transaction.commit();
-    }
-
-    public static class DependencyFactory {
-        public MainViewModel getModel(MainActivity owner) {
-            return new ViewModelProvider(owner).get(MainViewModel.class);
-        }
     }
 }
