@@ -13,13 +13,13 @@ public abstract class AbstractViewModel extends ViewModel implements CommonViewM
     @Override
     public void updateTitle(Activity activity, int title) {
         PublicMainViewModel mainViewModel = getMainActivityModel(activity);
-        mainViewModel.getUpdateTitleMLD().postValue(title);
+        mainViewModel.updateTitle(title);
     }
 
     @Override
     public void switchFramgment(Activity activity, NewFragmentVDO newFragment) {
         PublicMainViewModel mainViewModel = getMainActivityModel(activity);
-        mainViewModel.getSwitchFramgmentMLD().postValue(newFragment);
+        mainViewModel.switchFramgment(newFragment);
     }
 
     @Override

@@ -9,7 +9,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 import wadosm.bluetooth.dependency.FragmentFactory;
 
 @HiltViewModel
-// TODO: should implements CommonViewModelInteraction
 public class MainViewModel extends ViewModel implements PublicMainViewModel {
 
     private FragmentFactory fragmentFactory;
@@ -20,26 +19,34 @@ public class MainViewModel extends ViewModel implements PublicMainViewModel {
 
     private boolean screenInitialized = false;
 
+    public MutableLiveData<NewFragmentVDO> getSwitchFramgmentMLD() {
+        return switchFramgmentMLD;
+    }
+
+    public MutableLiveData<Integer> getUpdateTitleMLD() {
+        return updateTitleMLD;
+    }
+
     @Inject
     MainViewModel(FragmentFactory fragmentFactory) {
         this.fragmentFactory = fragmentFactory;
     }
 
     @Override
-    public MutableLiveData<NewFragmentVDO> getSwitchFramgmentMLD() {
-        return switchFramgmentMLD;
+    public void updateTitle(int title) {
+        getUpdateTitleMLD().postValue(title);
     }
 
     @Override
-    public MutableLiveData<Integer> getUpdateTitleMLD() {
-        return updateTitleMLD;
+    public void switchFramgment(NewFragmentVDO newFragment) {
+        getSwitchFramgmentMLD().postValue(newFragment);
     }
 
     public void onActivityInit() {
         if (!screenInitialized) {
             screenInitialized = true;
 
-            getSwitchFramgmentMLD().postValue(
+            switchFramgment(
                     new NewFragmentVDO(
                             fragmentFactory.getMachineryConnectFragment(),
                             false

@@ -1,11 +1,9 @@
 package wadosm.bluetooth.main;
 
-import androidx.lifecycle.MutableLiveData;
-
 public interface PublicMainViewModel {
 
-    MutableLiveData<NewFragmentVDO> getSwitchFramgmentMLD();
+    void updateTitle(int title);
 
-    MutableLiveData<Integer> getUpdateTitleMLD();
+    void switchFramgment(NewFragmentVDO newFragment);
 
 }
