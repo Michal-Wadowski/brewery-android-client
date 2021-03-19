@@ -35,7 +35,7 @@ public class MainViewModel extends ViewModel implements PublicMainViewModel {
         return updateTitleMLD;
     }
 
-    public void onActivityStart() {
+    public void onActivityInit() {
         if (!screenInitialized) {
             screenInitialized = true;
 

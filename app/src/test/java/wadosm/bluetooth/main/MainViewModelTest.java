@@ -39,7 +39,7 @@ public class MainViewModelTest {
         };
 
         // when
-        model.onActivityStart();
+        model.onActivityInit();
 
         // then
         verify(switchFramgmentMLD, times(1)).postValue(
@@ -62,8 +62,8 @@ public class MainViewModelTest {
         };
 
         // when
-        model.onActivityStart();
-        model.onActivityStart();
+        model.onActivityInit();
+        model.onActivityInit();
 
         // then
         verify(switchFramgmentMLD, times(1)).postValue(

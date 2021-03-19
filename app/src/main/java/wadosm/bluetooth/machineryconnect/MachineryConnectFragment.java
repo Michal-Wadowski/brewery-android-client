@@ -7,14 +7,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import wadosm.bluetooth.R;
+import wadosm.bluetooth.dependency.ViewModelProviderFactory;
 
+@AndroidEntryPoint
 public class MachineryConnectFragment extends Fragment {
 
-    private static DependencyFactory dependencyFactory = new DependencyFactory();
+    @Inject
+    protected ViewModelProviderFactory viewModelProviderFactory;
 
     private TextView messagesBox;
     private Button connectButton;
@@ -23,30 +29,31 @@ public class MachineryConnectFragment extends Fragment {
         return new MachineryConnectFragment();
     }
 
-    public static DependencyFactory getDependencyFactory() {
-        return dependencyFactory;
-    }
-
-    public static void setDependencyFactory(DependencyFactory dependencyFactory) {
-        MachineryConnectFragment.dependencyFactory = dependencyFactory;
-    }
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View currentView = buildViews(inflater, container);
+
+        MachineryConnectViewModel model = buildModel();
+
+        setListeners(model);
+
+        model.onFragmentInit(getActivity());
+
+        return currentView;
+    }
+
+    private View buildViews(LayoutInflater inflater, ViewGroup container) {
         View currentView = inflater.inflate(R.layout.fragment_machinery_connect, container, false);
 
         messagesBox = currentView.findViewById(R.id.machineryConnect_messagesBox);
         connectButton = currentView.findViewById(R.id.machineryConnect_connectButton);
+        return currentView;
+    }
 
-        MachineryConnectViewModel model = getDependencyFactory().getModel(this);
-
+    private void setListeners(MachineryConnectViewModel model) {
         model.getMachineryConnectMLD().observe(getViewLifecycleOwner(), this::updateMachineryConnectView);
 
-        connectButton.setOnClickListener(buttonView -> model.onConnectButton(getContext()));
-
-        model.onFragmentInit(getContext());
-
-        return currentView;
+        connectButton.setOnClickListener(buttonView -> model.onConnectButton(getActivity()));
     }
 
     private void updateMachineryConnectView(MachineryConnectVDO content) {
@@ -58,9 +65,7 @@ public class MachineryConnectFragment extends Fragment {
         connectButton.setEnabled(content.isConnectButtonEnable());
     }
 
-    public static class DependencyFactory {
-        public MachineryConnectViewModel getModel(MachineryConnectFragment owner) {
-            return new ViewModelProvider(owner).get(MachineryConnectViewModel.class);
-        }
+    private MachineryConnectViewModel buildModel() {
+        return viewModelProviderFactory.getViewModelProvider(this).get(MachineryConnectViewModel.class);
     }
 }

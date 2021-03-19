@@ -11,38 +11,35 @@ import android.widget.TableRow;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import java.util.Arrays;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import wadosm.bluetooth.R;
 import wadosm.bluetooth.currentstate.stateitem.StateItemsVDO;
 import wadosm.bluetooth.currentstate.stateitem.StateVDO;
+import wadosm.bluetooth.dependency.ViewModelProviderFactory;
 
+@AndroidEntryPoint
 public class CurrentStateFragment extends Fragment {
-
-    private static DependencyFactory dependencyFactory = new DependencyFactory();
-
-    public static DependencyFactory getDependencyFactory() {
-        return dependencyFactory;
-    }
-
-    public static void setDependencyFactory(DependencyFactory dependencyFactory) {
-        CurrentStateFragment.dependencyFactory = dependencyFactory;
-    }
 
     public static CurrentStateFragment newInstance() {
         return new CurrentStateFragment();
     }
 
+    @Inject
+    protected ViewModelProviderFactory viewModelProviderFactory;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View currentView = inflater.inflate(R.layout.fragment_current_state, container, false);
 
-        CurrentStateViewModel model = getDependencyFactory().getModel(this);
+        CurrentStateViewModel model = buildModel();
 
-        model.onFragmentInit(getContext());
+        model.onFragmentInit(requireActivity());
 
         return currentView;
     }
@@ -81,9 +78,8 @@ public class CurrentStateFragment extends Fragment {
         }
     }
 
-    public static class DependencyFactory {
-        public CurrentStateViewModel getModel(CurrentStateFragment owner) {
-            return new ViewModelProvider(owner).get(CurrentStateViewModel.class);
-        }
+    private CurrentStateViewModel buildModel() {
+        return viewModelProviderFactory.getViewModelProvider(this).get(CurrentStateViewModel.class);
     }
+
 }

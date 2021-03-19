@@ -1,35 +1,30 @@
 package wadosm.bluetooth.machineryconnect;
 
-import android.content.Context;
+import android.app.Activity;
 
 import java.util.function.Consumer;
 
+import javax.inject.Inject;
+
 import wadosm.bluetooth.R;
 import wadosm.bluetooth.connectivity.DeviceConnectivity;
-import wadosm.bluetooth.connectivity.DeviceConnectivityFactory;
-import wadosm.bluetooth.dependency.FragmentFactoryImpl;
+import wadosm.bluetooth.dependency.FragmentFactory;
 import wadosm.bluetooth.main.NewFragmentVDO;
 
 public class MachineryConnectLogic {
 
-    PublicMachineryConnect machineryConnect;
+    private FragmentFactory fragmentFactory;
 
-    public MachineryConnectLogic(PublicMachineryConnect machineryConnect) {
-        this.machineryConnect = machineryConnect;
+    private DeviceConnectivity deviceConnectivity;
+
+    @Inject
+    public MachineryConnectLogic(FragmentFactory fragmentFactory, DeviceConnectivity deviceConnectivity) {
+        this.fragmentFactory = fragmentFactory;
+        this.deviceConnectivity = deviceConnectivity;
     }
 
-    private static DependencyFactory dependencyFactory = new DependencyFactory();
-
-    public static DependencyFactory getDependencyFactory() {
-        return dependencyFactory;
-    }
-
-    public static void setDependencyFactory(DependencyFactory dependencyFactory) {
-        MachineryConnectLogic.dependencyFactory = dependencyFactory;
-    }
-
-    public void onFragmentInit(Context context) {
-        machineryConnect.updateTitle(context, R.string.machineryConnect_connectToDevice);
+    public void onFragmentInit(PublicMachineryConnect machineryConnect, Activity activity) {
+        machineryConnect.updateTitle(activity, R.string.machineryConnect_connectToDevice);
 
         machineryConnect.updateMachineryConnect(new MachineryConnectVDO(
                 new MessageBoxVDO(R.string.machineryConnect_deviceNotConnectedYet),
@@ -37,19 +32,19 @@ public class MachineryConnectLogic {
         ));
     }
 
-    public void onConnectButton(Context context) {
+    public void onConnectButton(PublicMachineryConnect machineryConnect, Activity activity) {
         machineryConnect.updateMachineryConnect(new MachineryConnectVDO(
                 new MessageBoxVDO(R.string.machineryConnect_connecting),
                 false
         ));
 
-        getDependencyFactory().getDeviceConnectivity().connect(
-                getConnectionSuccessCallback(context),
-                getConnectionFailCallback()
+        deviceConnectivity.connect(
+                getConnectionSuccessCallback(machineryConnect, activity),
+                getConnectionFailCallback(machineryConnect)
         );
     }
 
-    private Consumer<String> getConnectionFailCallback() {
+    private Consumer<String> getConnectionFailCallback(PublicMachineryConnect machineryConnect) {
 
         return errorMessage -> machineryConnect.updateMachineryConnect(new MachineryConnectVDO(
                 new MessageBoxVDO(errorMessage),
@@ -57,23 +52,13 @@ public class MachineryConnectLogic {
         ));
     }
 
-    private Runnable getConnectionSuccessCallback(Context context) {
-        return () -> machineryConnect.switchFramgment(context,
+    private Runnable getConnectionSuccessCallback(PublicMachineryConnect machineryConnect, Activity activity) {
+        return () -> machineryConnect.switchFramgment(activity,
                 new NewFragmentVDO(
-                        getDependencyFactory().getFragmentFactory().getCurrentScheduleFragment(),
+                        fragmentFactory.getCurrentScheduleFragment(),
                         false
                 )
         );
-    }
-
-    public static class DependencyFactory {
-        public FragmentFactoryImpl getFragmentFactory() {
-            return new FragmentFactoryImpl();
-        }
-
-        public DeviceConnectivity getDeviceConnectivity() {
-            return DeviceConnectivityFactory.getInstance();
-        }
     }
 
 }

@@ -1,25 +1,21 @@
 package wadosm.bluetooth.currentstate;
 
-import android.content.Context;
+import android.app.Activity;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import wadosm.bluetooth.common.AbstractViewModel;
 
+@HiltViewModel
 public class CurrentStateViewModel extends AbstractViewModel {
 
-    private static DependencyFactory dependencyFactory = new DependencyFactory();
+    @Inject
+    public CurrentStateViewModel() {
+    }
 
     @Override
-    public void onFragmentInit(Context context) {
+    public void onFragmentInit(Activity activity) {
     }
 
-    public static DependencyFactory getDependencyFactory() {
-        return dependencyFactory;
-    }
-
-    public static void setDependencyFactory(DependencyFactory dependencyFactory) {
-        CurrentStateViewModel.dependencyFactory = dependencyFactory;
-    }
-
-    public static class DependencyFactory {
-    }
 }

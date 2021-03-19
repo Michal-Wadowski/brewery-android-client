@@ -22,18 +22,27 @@ public class MainActivity extends AppCompatActivity implements MainViewModelGett
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
         model = buildViewModel();
 
+        buildViews();
+
+        setListeners();
+
+        model.onActivityInit();
+    }
+
+    private void buildViews() {
+        setContentView(R.layout.activity_main);
+    }
+
+    private void setListeners() {
         model.getSwitchFramgmentMLD().observe(this, this::setFragment);
 
         model.getUpdateTitleMLD().observe(this, this::setTitle);
-
-        model.onActivityStart();
     }
 
-    public MainViewModel buildViewModel() {
+    private MainViewModel buildViewModel() {
         return viewModelProviderFactory.getViewModelProvider(this).get(MainViewModel.class);
     }
 

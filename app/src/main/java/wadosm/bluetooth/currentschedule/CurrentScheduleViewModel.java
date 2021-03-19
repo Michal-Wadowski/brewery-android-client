@@ -1,29 +1,22 @@
 package wadosm.bluetooth.currentschedule;
 
-import android.content.Context;
+import android.app.Activity;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import wadosm.bluetooth.common.AbstractViewModel;
 
+@HiltViewModel
 public class CurrentScheduleViewModel extends AbstractViewModel {
 
-    private static DependencyFactory dependencyFactory = new DependencyFactory();
-
+    @Inject
     public CurrentScheduleViewModel() {
+    }
+
+    @Override
+    public void onFragmentInit(Activity activity) {
 
     }
 
-    public void onFragmentInit(Context context) {
-
-    }
-
-    public static DependencyFactory getDependencyFactory() {
-        return dependencyFactory;
-    }
-
-    public static void setDependencyFactory(DependencyFactory dependencyFactory) {
-        CurrentScheduleViewModel.dependencyFactory = dependencyFactory;
-    }
-
-    public static class DependencyFactory {
-    }
 }

@@ -1,13 +1,13 @@
 package wadosm.bluetooth.common;
 
-import android.content.Context;
+import android.app.Activity;
 
 import wadosm.bluetooth.main.NewFragmentVDO;
 
 public interface CommonViewModelInteraction {
-    void updateTitle(Context context, int title);
+    void updateTitle(Activity activity, int title);
 
-    void switchFramgment(Context context, NewFragmentVDO newFragment);
+    void switchFramgment(Activity activity, NewFragmentVDO newFragment);
 
-    void onFragmentInit(Context context);
+    void onFragmentInit(Activity activity);
 }

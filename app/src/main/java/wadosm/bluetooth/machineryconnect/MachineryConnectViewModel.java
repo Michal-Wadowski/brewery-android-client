@@ -1,14 +1,18 @@
 package wadosm.bluetooth.machineryconnect;
 
-import android.content.Context;
+import android.app.Activity;
 
 import androidx.lifecycle.MutableLiveData;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import wadosm.bluetooth.common.AbstractViewModel;
 
+@HiltViewModel
 public class MachineryConnectViewModel extends AbstractViewModel implements PublicMachineryConnect {
 
-    private static DependencyFactory dependencyFactory = new DependencyFactory();
+    private MachineryConnectLogic machineryConnectLogic;
 
     private final MutableLiveData<MachineryConnectVDO> machineryConnectMLD = new MutableLiveData<>();
 
@@ -16,18 +20,9 @@ public class MachineryConnectViewModel extends AbstractViewModel implements Publ
         return machineryConnectMLD;
     }
 
-    private MachineryConnectLogic machineryConnectLogic;
-
-    public MachineryConnectViewModel() {
-        machineryConnectLogic = getDependencyFactory().getMachineryConnectLogic(this);
-    }
-
-    public static DependencyFactory getDependencyFactory() {
-        return dependencyFactory;
-    }
-
-    public static void setDependencyFactory(DependencyFactory dependencyFactory) {
-        MachineryConnectViewModel.dependencyFactory = dependencyFactory;
+    @Inject
+    public MachineryConnectViewModel(MachineryConnectLogic machineryConnectLogic) {
+        this.machineryConnectLogic = machineryConnectLogic;
     }
 
     @Override
@@ -36,17 +31,12 @@ public class MachineryConnectViewModel extends AbstractViewModel implements Publ
     }
 
     @Override
-    public void onFragmentInit(Context context) {
-        machineryConnectLogic.onFragmentInit(context);
+    public void onFragmentInit(Activity activity) {
+        machineryConnectLogic.onFragmentInit(this, activity);
     }
 
-    public void onConnectButton(Context context) {
-        machineryConnectLogic.onConnectButton(context);
+    public void onConnectButton(Activity activity) {
+        machineryConnectLogic.onConnectButton(this, activity);
     }
 
-    public static class DependencyFactory {
-        public MachineryConnectLogic getMachineryConnectLogic(PublicMachineryConnect machineryConnect) {
-            return new MachineryConnectLogic(machineryConnect);
-        }
-    }
 }

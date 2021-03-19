@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,12 +14,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import wadosm.bluetooth.R;
 import wadosm.bluetooth.currentstate.CurrentStateFragment;
+import wadosm.bluetooth.dependency.ViewModelProviderFactory;
 
+@AndroidEntryPoint
 public class CurrentScheduleFragment extends Fragment {
 
-    private static DependencyFactory dependencyFactory = new DependencyFactory();
+    @Inject
+    ViewModelProviderFactory viewModelProviderFactory;
 
     private RecyclerView currentScheduleRecyler;
 
@@ -30,14 +35,6 @@ public class CurrentScheduleFragment extends Fragment {
 
     public static CurrentScheduleFragment newInstance() {
         return new CurrentScheduleFragment();
-    }
-
-    public static DependencyFactory getDependencyFactory() {
-        return dependencyFactory;
-    }
-
-    public static void setDependencyFactory(DependencyFactory dependencyFactory) {
-        CurrentScheduleFragment.dependencyFactory = dependencyFactory;
     }
 
     @Override
@@ -58,16 +55,15 @@ public class CurrentScheduleFragment extends Fragment {
         manager.replace(R.id.stateContainer, CurrentStateFragment.newInstance());
         manager.commit();
 
-        CurrentScheduleViewModel model = getDependencyFactory().getModel(this);
+        CurrentScheduleViewModel model = buildModel();
 
-        model.onFragmentInit(getContext());
+        model.onFragmentInit(getActivity());
 
         return currentView;
     }
 
-    public static class DependencyFactory {
-        public CurrentScheduleViewModel getModel(CurrentScheduleFragment owner) {
-            return new ViewModelProvider(owner).get(CurrentScheduleViewModel.class);
-        }
+    private CurrentScheduleViewModel buildModel() {
+        return viewModelProviderFactory.getViewModelProvider(this).get(CurrentScheduleViewModel.class);
     }
+
 }

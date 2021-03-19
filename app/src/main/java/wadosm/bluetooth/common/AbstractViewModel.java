@@ -1,6 +1,6 @@
 package wadosm.bluetooth.common;
 
-import android.content.Context;
+import android.app.Activity;
 
 import androidx.lifecycle.ViewModel;
 
@@ -11,25 +11,26 @@ import wadosm.bluetooth.main.PublicMainViewModel;
 public abstract class AbstractViewModel extends ViewModel implements CommonViewModelInteraction {
 
     @Override
-    public void updateTitle(Context context, int title) {
-        PublicMainViewModel mainViewModel = getMainActivityModel(context);
+    public void updateTitle(Activity activity, int title) {
+        PublicMainViewModel mainViewModel = getMainActivityModel(activity);
         mainViewModel.getUpdateTitleMLD().postValue(title);
     }
 
     @Override
-    public void switchFramgment(Context context, NewFragmentVDO newFragment) {
-        PublicMainViewModel mainViewModel = getMainActivityModel(context);
+    public void switchFramgment(Activity activity, NewFragmentVDO newFragment) {
+        PublicMainViewModel mainViewModel = getMainActivityModel(activity);
         mainViewModel.getSwitchFramgmentMLD().postValue(newFragment);
     }
 
     @Override
-    abstract public void onFragmentInit(Context context);
+    abstract public void onFragmentInit(Activity activity);
 
-    protected PublicMainViewModel getMainActivityModel(Context context) {
-        if (context instanceof MainActivity) {
-            return ((MainActivity) context).getModel();
-        } else
+    protected PublicMainViewModel getMainActivityModel(Activity activity) {
+        if (activity instanceof MainActivity) {
+            return ((MainActivity) activity).getModel();
+        } else {
             throw new RuntimeException("MainActivity expected");
+        }
     }
 
 }
