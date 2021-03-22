@@ -4,15 +4,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -27,11 +22,13 @@ public class CurrentScheduleFragment extends Fragment {
     @Inject
     ViewModelProviderFactory viewModelProviderFactory;
 
-    private RecyclerView currentScheduleRecyler;
+    private CurrentScheduleViewModel model;
 
-    private RecyclerView.Adapter currentScheduleAdapter;
+//    private RecyclerView currentScheduleRecyler;
+//
+//    private RecyclerView.Adapter currentScheduleAdapter;
 
-    private List<ScheduleItem> content = new ArrayList<>();
+//    private List<ScheduleItem> content = new ArrayList<>();
 
     public static CurrentScheduleFragment newInstance() {
         return new CurrentScheduleFragment();
@@ -41,25 +38,43 @@ public class CurrentScheduleFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View currentView = inflater.inflate(R.layout.fragment_current_schedule, container, false);
 
-        content.add(new ScheduleItem());
-        content.add(new ScheduleItem());
+//        content.add(new ScheduleItem());
+//        content.add(new ScheduleItem());
+//
+//        currentScheduleRecyler = currentView.findViewById(R.id.currentScheduleRecyler);
+//        currentScheduleAdapter = new ScheduleAdapter(content);
+//
+//        currentScheduleRecyler.setLayoutManager(new LinearLayoutManager(getContext()));
+//        currentScheduleRecyler.setAdapter(currentScheduleAdapter);
+//        currentScheduleRecyler.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
-        currentScheduleRecyler = currentView.findViewById(R.id.currentScheduleRecyler);
-        currentScheduleAdapter = new ScheduleAdapter(content);
+        initChildFragments();
 
-        currentScheduleRecyler.setLayoutManager(new LinearLayoutManager(getContext()));
-        currentScheduleRecyler.setAdapter(currentScheduleAdapter);
-        currentScheduleRecyler.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
-
-        FragmentTransaction manager = getChildFragmentManager().beginTransaction();
-        manager.replace(R.id.stateContainer, CurrentStateFragment.newInstance());
-        manager.commit();
-
-        CurrentScheduleViewModel model = buildModel();
+        model = buildModel();
 
         model.onFragmentInit(getActivity());
 
+        model.getDataFetchedMLD().observe(getViewLifecycleOwner(), this::updateDataFetched);
+
         return currentView;
+    }
+
+    @Override
+    public void onDetach() {
+        model.onFragmentDetach(getActivity());
+
+        super.onDetach();
+    }
+
+    private void updateDataFetched(boolean fetched) {
+        TextView dataFetching = getView().findViewById(R.id.dataFetching);
+        dataFetching.setVisibility(fetched ? View.GONE : View.VISIBLE);
+    }
+
+    private void initChildFragments() {
+        FragmentTransaction manager = getChildFragmentManager().beginTransaction();
+        manager.replace(R.id.stateContainer, CurrentStateFragment.newInstance());
+        manager.commit();
     }
 
     private CurrentScheduleViewModel buildModel() {

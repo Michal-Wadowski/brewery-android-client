@@ -7,8 +7,8 @@ import dagger.Provides;
 import dagger.hilt.InstallIn;
 import dagger.hilt.components.SingletonComponent;
 import wadosm.bluetooth.BuildConfig;
-import wadosm.bluetooth.connectivity.DemoDeviceConnectivity;
 import wadosm.bluetooth.connectivity.DeviceConnectivity;
+import wadosm.bluetooth.connectivity.demo.DemoDeviceConnectivity;
 
 @Module
 @InstallIn(SingletonComponent.class)
@@ -18,7 +18,7 @@ public class MainDependencyProvider {
 
     public static ViewModelProviderFactory viewModelProviderFactory;
 
-    public static DemoDeviceConnectivity demoDeviceConnectivity;
+    public static DeviceConnectivity deviceConnectivity;
 
     @Singleton
     @Provides
@@ -43,8 +43,8 @@ public class MainDependencyProvider {
     @Singleton
     @Provides
     DeviceConnectivity bindDeviceConnectivity() {
-        if (demoDeviceConnectivity != null) {
-            return demoDeviceConnectivity;
+        if (deviceConnectivity != null) {
+            return deviceConnectivity;
         }
 
         if (BuildConfig.FLAVOR.equals("demo")) {

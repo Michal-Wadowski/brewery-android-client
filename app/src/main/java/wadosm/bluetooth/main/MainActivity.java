@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import wadosm.bluetooth.R;
 import wadosm.bluetooth.dependency.ViewModelProviderFactory;
+import wadosm.bluetooth.main.model.NewFragmentVDO;
 
 @AndroidEntryPoint
 public class MainActivity extends AppCompatActivity implements MainViewModelGetter {

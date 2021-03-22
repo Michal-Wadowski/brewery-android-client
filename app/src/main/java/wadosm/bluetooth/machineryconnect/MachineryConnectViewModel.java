@@ -8,11 +8,12 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import wadosm.bluetooth.common.AbstractViewModel;
+import wadosm.bluetooth.machineryconnect.model.MachineryConnectVDO;
 
 @HiltViewModel
 public class MachineryConnectViewModel extends AbstractViewModel implements PublicMachineryConnect {
 
-    private MachineryConnectLogic machineryConnectLogic;
+    private final MachineryConnectLogic machineryConnectLogic;
 
     private final MutableLiveData<MachineryConnectVDO> machineryConnectMLD = new MutableLiveData<>();
 
@@ -33,6 +34,10 @@ public class MachineryConnectViewModel extends AbstractViewModel implements Publ
     @Override
     public void onFragmentInit(Activity activity) {
         machineryConnectLogic.onFragmentInit(this, activity);
+    }
+
+    @Override
+    public void onFragmentDetach(Activity activity) {
     }
 
     public void onConnectButton(Activity activity) {

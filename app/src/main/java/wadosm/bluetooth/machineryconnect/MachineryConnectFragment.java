@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import wadosm.bluetooth.R;
 import wadosm.bluetooth.dependency.ViewModelProviderFactory;
+import wadosm.bluetooth.machineryconnect.model.MachineryConnectVDO;
 
 @AndroidEntryPoint
 public class MachineryConnectFragment extends Fragment {

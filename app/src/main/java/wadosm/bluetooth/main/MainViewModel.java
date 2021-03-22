@@ -7,6 +7,7 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import wadosm.bluetooth.dependency.FragmentFactory;
+import wadosm.bluetooth.main.model.NewFragmentVDO;
 
 @HiltViewModel
 public class MainViewModel extends ViewModel implements PublicMainViewModel {

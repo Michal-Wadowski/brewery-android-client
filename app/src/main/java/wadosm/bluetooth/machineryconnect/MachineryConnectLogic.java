@@ -2,14 +2,15 @@ package wadosm.bluetooth.machineryconnect;
 
 import android.app.Activity;
 
-import java.util.function.Consumer;
-
 import javax.inject.Inject;
 
 import wadosm.bluetooth.R;
+import wadosm.bluetooth.common.Consumer;
 import wadosm.bluetooth.connectivity.DeviceConnectivity;
 import wadosm.bluetooth.dependency.FragmentFactory;
-import wadosm.bluetooth.main.NewFragmentVDO;
+import wadosm.bluetooth.machineryconnect.model.MachineryConnectVDO;
+import wadosm.bluetooth.machineryconnect.model.MessageBoxVDO;
+import wadosm.bluetooth.main.model.NewFragmentVDO;
 
 public class MachineryConnectLogic {
 
@@ -45,7 +46,6 @@ public class MachineryConnectLogic {
     }
 
     private Consumer<String> getConnectionFailCallback(PublicMachineryConnect machineryConnect) {
-
         return errorMessage -> machineryConnect.updateMachineryConnect(new MachineryConnectVDO(
                 new MessageBoxVDO(errorMessage),
                 true
@@ -53,6 +53,9 @@ public class MachineryConnectLogic {
     }
 
     private Runnable getConnectionSuccessCallback(PublicMachineryConnect machineryConnect, Activity activity) {
+        // TODO: Attach onDisconnected callack to go back to MachineryConnectFragment
+        // TODO: Write tests for that
+
         return () -> machineryConnect.switchFramgment(activity,
                 new NewFragmentVDO(
                         fragmentFactory.getCurrentScheduleFragment(),

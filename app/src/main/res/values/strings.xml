@@ -3,6 +3,7 @@
 
     <string name="machineryConnect_connectToDevice">Connect to the device</string>
     <string name="machineryConnect_deviceNotConnectedYet">You\'re not connected to the device yet</string>
-    <string name="machineryConnect_connecting">Connecting...</string>
+    <string name="machineryConnect_connecting">Connecting…</string>
+    <string name="currentSchedule_dataFetching">Data fetching…</string>
 
 </resources>

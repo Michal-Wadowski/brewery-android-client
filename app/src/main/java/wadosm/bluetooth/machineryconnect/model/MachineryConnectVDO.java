@@ -1,4 +1,4 @@
-package wadosm.bluetooth.machineryconnect;
+package wadosm.bluetooth.machineryconnect.model;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

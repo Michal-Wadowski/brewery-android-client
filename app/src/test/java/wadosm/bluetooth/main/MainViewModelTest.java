@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import wadosm.bluetooth.dependency.FragmentFactoryImpl;
+import wadosm.bluetooth.main.model.NewFragmentVDO;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;

@@ -4,24 +4,22 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TableLayout;
-import android.widget.TableRow;
+import android.widget.LinearLayout;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import wadosm.bluetooth.R;
-import wadosm.bluetooth.currentstate.stateitem.StateItemsVDO;
-import wadosm.bluetooth.currentstate.stateitem.StateVDO;
+import wadosm.bluetooth.currentstate.model.StateElementVDO;
+import wadosm.bluetooth.currentstate.model.StateElementsVDO;
+import wadosm.bluetooth.currentstate.view.SensorViewElement;
 import wadosm.bluetooth.dependency.ViewModelProviderFactory;
+
+import static android.widget.LinearLayout.HORIZONTAL;
 
 @AndroidEntryPoint
 public class CurrentStateFragment extends Fragment {
@@ -30,6 +28,8 @@ public class CurrentStateFragment extends Fragment {
         return new CurrentStateFragment();
     }
 
+    private CurrentStateViewModel model;
+
     @Inject
     protected ViewModelProviderFactory viewModelProviderFactory;
 
@@ -37,37 +37,36 @@ public class CurrentStateFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View currentView = inflater.inflate(R.layout.fragment_current_state, container, false);
 
-        CurrentStateViewModel model = buildModel();
+        model = buildModel();
 
         model.onFragmentInit(requireActivity());
+
+        model.getStateItemsMLD().observe(getViewLifecycleOwner(), this::updateStateItemsView);
 
         return currentView;
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onDetach() {
+        model.onFragmentDetach(getActivity());
 
-        TableLayout layout = view.findViewById(R.id.stateItemsContainer);
+        super.onDetach();
+    }
 
-        StateItemsVDO stateItems = new StateItemsVDO();
+    private void updateStateItemsView(StateElementsVDO stateItemsVDO) {
+        LinearLayout layout = getView().findViewById(R.id.stateItemsContainer);
+        layout.removeAllViews();
 
+        List<List<StateElementVDO>> items = stateItemsVDO.getItems();
+        for (List<StateElementVDO> rows : items) {
+            LinearLayout row = new LinearLayout(getContext());
+            row.setOrientation(HORIZONTAL);
+            for (StateElementVDO item : rows) {
+                SensorViewElement textView = new SensorViewElement(getContext(), item);
 
-        stateItems.addRow(Arrays.asList(new StateVDO("Foo"), new StateVDO("Bar")));
-        stateItems.addRow(Arrays.asList(new StateVDO("Biz"), new StateVDO("Buz"), new StateVDO("XXX")));
-
-        List<List<StateVDO>> items = stateItems.getItems();
-        for (List<StateVDO> rows : items) {
-            TableRow row = new TableRow(getContext());
-
-            for (StateVDO item : rows) {
-                Button textView = new Button(getContext());
-                textView.setText(item.getName());
-
-                TableRow.LayoutParams param = new TableRow.LayoutParams(
+                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        1.0f
+                        ViewGroup.LayoutParams.WRAP_CONTENT
                 );
                 textView.setLayoutParams(param);
 
@@ -77,6 +76,7 @@ public class CurrentStateFragment extends Fragment {
             layout.addView(row);
         }
     }
+
 
     private CurrentStateViewModel buildModel() {
         return viewModelProviderFactory.getViewModelProvider(this).get(CurrentStateViewModel.class);

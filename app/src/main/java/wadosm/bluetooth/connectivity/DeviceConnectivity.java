@@ -1,6 +1,6 @@
 package wadosm.bluetooth.connectivity;
 
-import java.util.function.Consumer;
+import wadosm.bluetooth.common.Consumer;
 
 public interface DeviceConnectivity {
 

@@ -5,8 +5,8 @@ import android.app.Activity;
 import androidx.lifecycle.ViewModel;
 
 import wadosm.bluetooth.main.MainActivity;
-import wadosm.bluetooth.main.NewFragmentVDO;
 import wadosm.bluetooth.main.PublicMainViewModel;
+import wadosm.bluetooth.main.model.NewFragmentVDO;
 
 public abstract class AbstractViewModel extends ViewModel implements CommonViewModelInteraction {
 
@@ -24,6 +24,9 @@ public abstract class AbstractViewModel extends ViewModel implements CommonViewM
 
     @Override
     abstract public void onFragmentInit(Activity activity);
+
+    @Override
+    abstract public void onFragmentDetach(Activity activity);
 
     protected PublicMainViewModel getMainActivityModel(Activity activity) {
         if (activity instanceof MainActivity) {

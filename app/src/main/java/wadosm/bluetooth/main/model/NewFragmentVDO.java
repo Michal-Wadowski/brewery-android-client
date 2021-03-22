@@ -1,4 +1,4 @@
-package wadosm.bluetooth.main;
+package wadosm.bluetooth.main.model;
 
 import androidx.fragment.app.Fragment;
 

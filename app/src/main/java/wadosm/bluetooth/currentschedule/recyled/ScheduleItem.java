@@ -1,4 +1,4 @@
-package wadosm.bluetooth.currentschedule;
+package wadosm.bluetooth.currentschedule.recyled;
 
 public class ScheduleItem {
 
