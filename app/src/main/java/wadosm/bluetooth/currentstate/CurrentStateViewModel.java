@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
+import wadosm.bluetooth.R;
 import wadosm.bluetooth.common.AbstractViewModel;
 import wadosm.bluetooth.connectivity.DeviceConnectivity;
 import wadosm.bluetooth.connectivity.DeviceService;
@@ -35,6 +36,8 @@ public class CurrentStateViewModel extends AbstractViewModel {
     public void onFragmentInit(Activity activity) {
         DeviceService service = deviceConnectivity.getDeviceService();
         service.addDeviceStateListener(this::onStateReceivedCallback);
+
+        updateTitle(activity, R.string.currentSchedule_title);
     }
 
     @Override

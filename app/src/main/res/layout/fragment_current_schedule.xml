@@ -20,6 +20,12 @@
         android:layout_height="wrap_content"
         android:padding="10dp" />
 
+    <Switch
+        android:id="@+id/editStateEnable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Switch" />
+
     <!--    <LinearLayout-->
     <!--        android:layout_width="match_parent"-->
     <!--        android:layout_height="match_parent"-->

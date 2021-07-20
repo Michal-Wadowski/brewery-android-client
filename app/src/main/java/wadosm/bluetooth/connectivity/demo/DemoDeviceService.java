@@ -2,6 +2,7 @@ package wadosm.bluetooth.connectivity.demo;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Random;
 import java.util.Set;
 import java.util.Timer;
@@ -66,7 +67,7 @@ public class DemoDeviceService implements DeviceService {
                         new StateElement("Temp 1", StateElement.Type.TEMPERATURE_SENSOR, temperature + " °C"),
                         new StateElement("Grzałka 1", StateElement.Type.HEATING_ELEMENT, "50%"),
                         new StateElement("Grzałka 2", StateElement.Type.HEATING_ELEMENT, "50%"),
-                        new StateElement("Dodać chmiel", StateElement.Type.ALARM, "00:" + mins + ":" + secs),
+                        new StateElement("Dodać chmiel", StateElement.Type.ALARM, String.format(Locale.getDefault(), "00:%02d:%02d", mins, secs)),
                         new StateElement("Mieszadło", StateElement.Type.OUTPUT, "on")
                 )
         );
