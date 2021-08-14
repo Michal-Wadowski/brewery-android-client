@@ -4,101 +4,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="10dp"
     tools:context=".currentschedule.CurrentScheduleFragment">
 
-    <TextView
-        android:id="@+id/dataFetching"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/currentSchedule_dataFetching"
-        android:gravity="center"
-        android:layout_margin="20dp" />
 
-    <FrameLayout
-        android:id="@+id/stateContainer"
+    <Button
+        android:id="@+id/btn_fermenting"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp" />
+        android:height="100dp"
+        android:text="Fermentacja" />
 
-    <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/swPower"
+    <Button
+        android:id="@+id/btn_brewing"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Power" />
+        android:height="100dp"
+        android:text="Warzenie" />
 
-    <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/swMotor1"
+    <View
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Motor 1" />
-
-    <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/swMotor2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Motor 2" />
-
-    <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/swMotor3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Motor 3" />
+        android:layout_weight="1"/>
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textView4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Sound" />
+        android:text="Wyłącz / Uruchom ponownie" />
 
-    <SeekBar
-        android:id="@+id/sbSound"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/textView2"
+    <Spinner
+        android:id="@+id/sp_poweroff_restart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Mains 1" />
-
-    <SeekBar
-        android:id="@+id/sbMains1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Mains 2" />
-
-    <SeekBar
-        android:id="@+id/sbMains2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown" />
 
 
-    <!--    <LinearLayout-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        android:orientation="vertical"-->
-    <!--        android:paddingHorizontal="20dp"-->
-    <!--        android:paddingBottom="20dp">-->
-
-    <!--        <Button-->
-    <!--            android:id="@+id/button"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_marginBottom="20dp"-->
-    <!--            android:text="Start" />-->
-
-
-    <!--        <androidx.recyclerview.widget.RecyclerView-->
-    <!--            android:id="@+id/currentScheduleRecyler"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="match_parent">-->
-
-    <!--        </androidx.recyclerview.widget.RecyclerView>-->
-
-    <!--    </LinearLayout>-->
 </LinearLayout>

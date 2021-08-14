@@ -10,17 +10,17 @@ public interface DeviceService {
 
     void setOnDisconnected(Runnable onDiscronnected);
 
-    void fetchCurrentDeviceState();
+    void addResponseListener(Consumer<String> onJsonReceivedCallback);
 
-    void addDeviceStateListener(Consumer<StateElements> onStateReceivedCallback);
+    void removeResponseListener(Consumer<String> onJsonReceivedCallback);
 
-    void removeDeviceStateListener(Consumer<StateElements> onStateReceivedCallback);
+    void powerOff();
 
-    void powerEnable(boolean enable);
+    void restart();
 
-    void motorEnable(int motorNumber, boolean enable);
+    int getFermentingState();
 
-    void playSound(int progress);
+    int Fermenting_setDestinationTemperature(Integer value);
 
-    void setMainsPower(int mainsNumber, int progress);
+    int Fermenting_enable(boolean enable);
 }

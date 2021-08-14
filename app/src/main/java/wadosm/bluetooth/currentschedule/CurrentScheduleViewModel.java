@@ -12,6 +12,7 @@ import wadosm.bluetooth.common.AbstractViewModel;
 import wadosm.bluetooth.connectivity.DeviceConnectivity;
 import wadosm.bluetooth.connectivity.DeviceService;
 import wadosm.bluetooth.connectivity.model.StateElements;
+import wadosm.bluetooth.dependency.FragmentFactory;
 
 @HiltViewModel
 public class CurrentScheduleViewModel extends AbstractViewModel {
@@ -20,46 +21,43 @@ public class CurrentScheduleViewModel extends AbstractViewModel {
 
     private final DeviceConnectivity deviceConnectivity;
 
+    private final FragmentFactory fragmentFactory;
+
+    public DeviceConnectivity getDeviceConnectivity() {
+        return deviceConnectivity;
+    }
+
+    public FragmentFactory getFragmentFactory() {
+        return fragmentFactory;
+    }
+
     public MutableLiveData<Boolean> getDataFetchedMLD() {
         return dataFetchedMLD;
     }
 
     @Inject
-    public CurrentScheduleViewModel(DeviceConnectivity deviceConnectivity) {
+    public CurrentScheduleViewModel(DeviceConnectivity deviceConnectivity, FragmentFactory fragmentFactory) {
         this.deviceConnectivity = deviceConnectivity;
+        this.fragmentFactory = fragmentFactory;
     }
+
 
     @Override
     public void onFragmentInit(Activity activity) {
-        DeviceService service = deviceConnectivity.getDeviceService();
-        service.fetchCurrentDeviceState();
-
-        service.addDeviceStateListener(this::onStateReceivedCallback);
+//        DeviceService service = deviceConnectivity.getDeviceService();
+//        service.fetchCurrentDeviceState();
+//
+//        service.addDeviceStateListener(this::onStateReceivedCallback);
     }
 
     @Override
     public void onFragmentDetach(Activity activity) {
-        DeviceService service = deviceConnectivity.getDeviceService();
-        service.addDeviceStateListener(this::onStateReceivedCallback);
+//        DeviceService service = deviceConnectivity.getDeviceService();
+//        service.addDeviceStateListener(this::onStateReceivedCallback);
     }
 
-    public void onStateReceivedCallback(StateElements stateItems) {
-        dataFetchedMLD.postValue(true);
-    }
+//    public void onStateReceivedCallback(StateElements stateItems) {
+//        dataFetchedMLD.postValue(true);
+//    }
 
-    public void onSwitchPower(Activity activity, boolean isChecked) {
-        deviceConnectivity.getDeviceService().powerEnable(isChecked);
-    }
-
-    public void onSwitchMotor(Activity activity, int number, boolean isChecked) {
-        deviceConnectivity.getDeviceService().motorEnable(number, isChecked);
-    }
-
-    public void onSeekBarSound(int progress) {
-        deviceConnectivity.getDeviceService().playSound(progress);
-    }
-
-    public void onSeekBarMains(int number, int progress) {
-        deviceConnectivity.getDeviceService().setMainsPower(number, progress);
-    }
 }

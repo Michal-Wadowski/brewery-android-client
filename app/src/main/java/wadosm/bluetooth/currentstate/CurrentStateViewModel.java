@@ -34,16 +34,15 @@ public class CurrentStateViewModel extends AbstractViewModel {
 
     @Override
     public void onFragmentInit(Activity activity) {
-        DeviceService service = deviceConnectivity.getDeviceService();
-        service.addDeviceStateListener(this::onStateReceivedCallback);
-
-        updateTitle(activity, R.string.currentSchedule_title);
+//        DeviceService service = deviceConnectivity.getDeviceService();
+//        service.addDeviceStateListener(this::onStateReceivedCallback);
+//        updateTitle(activity, R.string.currentSchedule_title);
     }
 
     @Override
     public void onFragmentDetach(Activity activity) {
-        DeviceService service = deviceConnectivity.getDeviceService();
-        service.addDeviceStateListener(this::onStateReceivedCallback);
+//        DeviceService service = deviceConnectivity.getDeviceService();
+//        service.addDeviceStateListener(this::onStateReceivedCallback);
     }
 
     public void onStateReceivedCallback(StateElements stateItems) {

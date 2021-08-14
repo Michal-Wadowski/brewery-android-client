@@ -1,5 +1,9 @@
 package wadosm.bluetooth.connectivity.demo;
 
+import android.os.Handler;
+
+import com.google.gson.Gson;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Locale;
@@ -12,14 +16,22 @@ import wadosm.bluetooth.common.Consumer;
 import wadosm.bluetooth.connectivity.DeviceService;
 import wadosm.bluetooth.connectivity.model.StateElement;
 import wadosm.bluetooth.connectivity.model.StateElements;
+import wadosm.bluetooth.currentschedule.dto.FermentingState;
+import wadosm.bluetooth.currentschedule.dto.FermentingStatusResponse;
 
 public class DemoDeviceService implements DeviceService {
 
-    private final Set<Consumer<StateElements>> fetchCurrentDeviceStateCallbackQueue = new HashSet<>();
+    private final Set<Consumer<String>> fetchCurrentDeviceStateCallbackQueue = new HashSet<>();
 
-    private final Random random = new Random();
+    private int commandId = 0;
 
-    private int time;
+    private Handler scheduler = new Handler();
+
+    private Gson gson = new Gson();
+
+    private Random random = new Random();
+
+    private FermentingState fermentingState = new FermentingState(false, 25.0f, null, false);
 
     @Override
     public void disconnect() {
@@ -31,69 +43,70 @@ public class DemoDeviceService implements DeviceService {
     }
 
     @Override
-    public void fetchCurrentDeviceState() {
-        time = 12 * 60 + 59;
-
-        Timer t = new Timer();
-        t.scheduleAtFixedRate(new TimerTask() {
-                                  @Override
-                                  public void run() {
-                                      callCalbacksOnFetchCurrentDeviceState();
-                                  }
-                              },
-                1000,
-                1000);
+    public void addResponseListener(Consumer<String> onJsonReceivedCallback) {
+        fetchCurrentDeviceStateCallbackQueue.add(onJsonReceivedCallback);
     }
 
     @Override
-    public void addDeviceStateListener(Consumer<StateElements> onStateReceivedCallback) {
-        fetchCurrentDeviceStateCallbackQueue.add(onStateReceivedCallback);
+    public void removeResponseListener(Consumer<String> onJsonReceivedCallback) {
+        fetchCurrentDeviceStateCallbackQueue.remove(onJsonReceivedCallback);
     }
 
-    @Override
-    public void removeDeviceStateListener(Consumer<StateElements> onStateReceivedCallback) {
-        fetchCurrentDeviceStateCallbackQueue.remove(onStateReceivedCallback);
-    }
 
     @Override
-    public void powerEnable(boolean enable) {
+    public void powerOff() {
 
     }
 
     @Override
-    public void motorEnable(int motorNumber, boolean enable) {
+    public void restart() {
 
     }
 
     @Override
-    public void playSound(int progress) {
+    public int getFermentingState() {
+        int pendingCommandId = ++commandId;
 
+        scheduler.postDelayed(() -> {
+            for (Consumer<String> listener: fetchCurrentDeviceStateCallbackQueue) {
+                fermentingState.setCurrentTemperature(random.nextFloat() - 0.5f + fermentingState.getCurrentTemperature());
+                listener.accept(gson.toJson(new FermentingStatusResponse(pendingCommandId, null, fermentingState)));
+            }
+        }, 100);
+
+        return pendingCommandId;
     }
 
     @Override
-    public void setMainsPower(int mainsNumber, int progress) {
+    public int Fermenting_setDestinationTemperature(Integer value) {
+        int pendingCommandId = ++commandId;
 
+        scheduler.postDelayed(() -> {
+            for (Consumer<String> listener: fetchCurrentDeviceStateCallbackQueue) {
+                Float floatValue = null;
+                if (value != null) {
+                    floatValue = (float)value;
+                }
+                fermentingState.setDestinationTemperature(floatValue);
+                listener.accept(gson.toJson(new FermentingStatusResponse(pendingCommandId, null, fermentingState)));
+            }
+        }, 100);
+
+        return pendingCommandId;
     }
 
-    private void callCalbacksOnFetchCurrentDeviceState() {
-        double temperature = Math.round((70 + random.nextDouble() - 0.5) * 10) / 10.0;
+    @Override
+    public int Fermenting_enable(boolean enable) {
+        int pendingCommandId = ++commandId;
 
-        int mins = time / 60;
-        int secs = time % 60;
-        time--;
+        scheduler.postDelayed(() -> {
+            for (Consumer<String> listener: fetchCurrentDeviceStateCallbackQueue) {
+                fermentingState.setEnabled(enable);
+                listener.accept(gson.toJson(new FermentingStatusResponse(pendingCommandId, null, fermentingState)));
+            }
+        }, 100);
 
-        StateElements stateItems = new StateElements(
-                Arrays.asList(
-                        new StateElement("Temp 1", StateElement.Type.TEMPERATURE_SENSOR, temperature + " °C"),
-                        new StateElement("Grzałka 1", StateElement.Type.HEATING_ELEMENT, "50%"),
-                        new StateElement("Grzałka 2", StateElement.Type.HEATING_ELEMENT, "50%"),
-                        new StateElement("Dodać chmiel", StateElement.Type.ALARM, String.format(Locale.getDefault(), "00:%02d:%02d", mins, secs)),
-                        new StateElement("Mieszadło", StateElement.Type.OUTPUT, "on")
-                )
-        );
-
-        for (Consumer<StateElements> onStateReceivedCallback : fetchCurrentDeviceStateCallbackQueue) {
-            onStateReceivedCallback.accept(stateItems);
-        }
+        return pendingCommandId;
     }
+
 }
