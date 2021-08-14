@@ -2,6 +2,7 @@ package wadosm.bluetooth.currentschedule;
 
 import android.app.Activity;
 
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.MutableLiveData;
 
 import javax.inject.Inject;
@@ -46,4 +47,19 @@ public class CurrentScheduleViewModel extends AbstractViewModel {
         dataFetchedMLD.postValue(true);
     }
 
+    public void onSwitchPower(Activity activity, boolean isChecked) {
+        deviceConnectivity.getDeviceService().powerEnable(isChecked);
+    }
+
+    public void onSwitchMotor(Activity activity, int number, boolean isChecked) {
+        deviceConnectivity.getDeviceService().motorEnable(number, isChecked);
+    }
+
+    public void onSeekBarSound(int progress) {
+        deviceConnectivity.getDeviceService().playSound(progress);
+    }
+
+    public void onSeekBarMains(int number, int progress) {
+        deviceConnectivity.getDeviceService().setMainsPower(number, progress);
+    }
 }

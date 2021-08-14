@@ -15,4 +15,12 @@ public interface DeviceService {
     void addDeviceStateListener(Consumer<StateElements> onStateReceivedCallback);
 
     void removeDeviceStateListener(Consumer<StateElements> onStateReceivedCallback);
+
+    void powerEnable(boolean enable);
+
+    void motorEnable(int motorNumber, boolean enable);
+
+    void playSound(int progress);
+
+    void setMainsPower(int mainsNumber, int progress);
 }

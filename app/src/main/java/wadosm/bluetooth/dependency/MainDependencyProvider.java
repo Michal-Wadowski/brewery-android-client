@@ -9,6 +9,7 @@ import dagger.hilt.components.SingletonComponent;
 import wadosm.bluetooth.BuildConfig;
 import wadosm.bluetooth.connectivity.DeviceConnectivity;
 import wadosm.bluetooth.connectivity.demo.DemoDeviceConnectivity;
+import wadosm.bluetooth.connectivity.real.RealDeviceConnectivity;
 
 @Module
 @InstallIn(SingletonComponent.class)
@@ -50,7 +51,7 @@ public class MainDependencyProvider {
         if (BuildConfig.FLAVOR.equals("demo")) {
             return new DemoDeviceConnectivity();
         } else {
-            return null;
+            return new RealDeviceConnectivity();
         }
     }
 }

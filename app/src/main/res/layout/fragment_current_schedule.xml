@@ -20,11 +20,63 @@
         android:layout_height="wrap_content"
         android:padding="10dp" />
 
-    <Switch
-        android:id="@+id/editStateEnable"
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/swPower"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Switch" />
+        android:text="Power" />
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/swMotor1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Motor 1" />
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/swMotor2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Motor 2" />
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/swMotor3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Motor 3" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sound" />
+
+    <SeekBar
+        android:id="@+id/sbSound"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Mains 1" />
+
+    <SeekBar
+        android:id="@+id/sbMains1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Mains 2" />
+
+    <SeekBar
+        android:id="@+id/sbMains2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 
     <!--    <LinearLayout-->
     <!--        android:layout_width="match_parent"-->

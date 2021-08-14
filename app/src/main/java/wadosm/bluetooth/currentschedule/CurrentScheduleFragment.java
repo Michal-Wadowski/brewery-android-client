@@ -4,10 +4,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import javax.inject.Inject;
 
@@ -24,11 +30,14 @@ public class CurrentScheduleFragment extends Fragment {
 
     private CurrentScheduleViewModel model;
 
-//    private RecyclerView currentScheduleRecyler;
-//
-//    private RecyclerView.Adapter currentScheduleAdapter;
+    SwitchMaterial swPower;
+    SwitchMaterial swMotor1;
+    SwitchMaterial swMotor2;
+    SwitchMaterial swMotor3;
+    SeekBar sbSound;
+    SeekBar sbMains1;
+    SeekBar sbMains2;
 
-//    private List<ScheduleItem> content = new ArrayList<>();
 
     public static CurrentScheduleFragment newInstance() {
         return new CurrentScheduleFragment();
@@ -36,17 +45,7 @@ public class CurrentScheduleFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View currentView = inflater.inflate(R.layout.fragment_current_schedule, container, false);
-
-//        content.add(new ScheduleItem());
-//        content.add(new ScheduleItem());
-//
-//        currentScheduleRecyler = currentView.findViewById(R.id.currentScheduleRecyler);
-//        currentScheduleAdapter = new ScheduleAdapter(content);
-//
-//        currentScheduleRecyler.setLayoutManager(new LinearLayoutManager(getContext()));
-//        currentScheduleRecyler.setAdapter(currentScheduleAdapter);
-//        currentScheduleRecyler.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+        View currentView = buildViews(inflater, container);
 
         initChildFragments();
 
@@ -54,7 +53,70 @@ public class CurrentScheduleFragment extends Fragment {
 
         model.onFragmentInit(getActivity());
 
+        setListeners(model);
+
+        return currentView;
+    }
+
+    private void setListeners(CurrentScheduleViewModel model) {
         model.getDataFetchedMLD().observe(getViewLifecycleOwner(), this::updateDataFetched);
+
+        swPower.setOnCheckedChangeListener((buttonView, isChecked) -> model.onSwitchPower(getActivity(), isChecked));
+        swMotor1.setOnCheckedChangeListener((buttonView, isChecked) -> model.onSwitchMotor(getActivity(), 1, isChecked));
+        swMotor2.setOnCheckedChangeListener((buttonView, isChecked) -> model.onSwitchMotor(getActivity(), 2, isChecked));
+        swMotor3.setOnCheckedChangeListener((buttonView, isChecked) -> model.onSwitchMotor(getActivity(), 3, isChecked));
+
+        sbSound.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                model.onSeekBarSound(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+
+        sbMains1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                model.onSeekBarMains(1, progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+
+        sbMains2.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                model.onSeekBarMains(2, progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+    }
+
+    private View buildViews(LayoutInflater inflater, ViewGroup container) {
+        View currentView = inflater.inflate(R.layout.fragment_current_schedule, container, false);
+
+        swPower = currentView.findViewById(R.id.swPower);
+        swMotor1 = currentView.findViewById(R.id.swMotor1);
+        swMotor2 = currentView.findViewById(R.id.swMotor2);
+        swMotor3 = currentView.findViewById(R.id.swMotor3);
+
+        sbSound = currentView.findViewById(R.id.sbSound);
+        sbMains1 = currentView.findViewById(R.id.sbMains1);
+        sbMains2 = currentView.findViewById(R.id.sbMains2);
 
         return currentView;
     }

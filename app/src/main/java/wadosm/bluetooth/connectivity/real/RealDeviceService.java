@@ -1,4 +1,9 @@
-package wadosm.bluetooth.connectivity.demo;
+package wadosm.bluetooth.connectivity.real;
+
+import com.google.gson.Gson;
+import com.harrysoft.androidbluetoothserial.BluetoothManager;
+import com.harrysoft.androidbluetoothserial.BluetoothSerialDevice;
+import com.harrysoft.androidbluetoothserial.SimpleBluetoothDeviceInterface;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -12,8 +17,9 @@ import wadosm.bluetooth.common.Consumer;
 import wadosm.bluetooth.connectivity.DeviceService;
 import wadosm.bluetooth.connectivity.model.StateElement;
 import wadosm.bluetooth.connectivity.model.StateElements;
+import wadosm.bluetooth.connectivity.real.dto.CommandDTO;
 
-public class DemoDeviceService implements DeviceService {
+public class RealDeviceService implements DeviceService {
 
     private final Set<Consumer<StateElements>> fetchCurrentDeviceStateCallbackQueue = new HashSet<>();
 
@@ -21,8 +27,20 @@ public class DemoDeviceService implements DeviceService {
 
     private int time;
 
+    BluetoothManager bluetoothManager;
+
+    Gson gson = new Gson();
+
+    private SimpleBluetoothDeviceInterface deviceInterface;
+
+    public RealDeviceService(BluetoothManager bluetoothManager, BluetoothSerialDevice connectedDevice) {
+        deviceInterface = connectedDevice.toSimpleDeviceInterface();
+        this.bluetoothManager = bluetoothManager;
+    }
+
     @Override
     public void disconnect() {
+        bluetoothManager.closeDevice(deviceInterface);
     }
 
     @Override
@@ -57,22 +75,24 @@ public class DemoDeviceService implements DeviceService {
 
     @Override
     public void powerEnable(boolean enable) {
-
+        deviceInterface.sendMessage(gson.toJson(CommandDTO.powerEnable(enable)));
     }
 
     @Override
     public void motorEnable(int motorNumber, boolean enable) {
-
+        deviceInterface.sendMessage(gson.toJson(CommandDTO.motorEnable(motorNumber, enable)));
     }
 
     @Override
     public void playSound(int progress) {
-
+        int period = (int)(progress * (500/99.999));
+        deviceInterface.sendMessage(gson.toJson(CommandDTO.playSound(period)));
     }
 
     @Override
     public void setMainsPower(int mainsNumber, int progress) {
-
+        int power = (int)(progress * (0xff/99.999));
+        deviceInterface.sendMessage(gson.toJson(CommandDTO.setMainsPower(mainsNumber, power)));
     }
 
     private void callCalbacksOnFetchCurrentDeviceState() {

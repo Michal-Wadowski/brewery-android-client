@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import wadosm.bluetooth.common.AbstractViewModel;
 import wadosm.bluetooth.machineryconnect.model.MachineryConnectVDO;
+import wadosm.bluetooth.main.MainActivity;
 
 @HiltViewModel
 public class MachineryConnectViewModel extends AbstractViewModel implements PublicMachineryConnect {
@@ -41,6 +42,12 @@ public class MachineryConnectViewModel extends AbstractViewModel implements Publ
     }
 
     public void onConnectButton(Activity activity) {
+
+//        if (activity instanceof MainActivity) {
+//            MainActivity ma = (MainActivity)activity;
+//            ma.sendMessage();
+//        }
+
         machineryConnectLogic.onConnectButton(this, activity);
     }
 
