@@ -1,11 +1,13 @@
 <resources>
-    <string name="app_name">Bluetooth</string>
+    <string name="app_name">Browar u Szwagra</string>
 
-    <string name="machineryConnect_connectToDevice">Connect to the device</string>
-    <string name="machineryConnect_deviceNotConnectedYet">You\'re not connected to the device yet</string>
-    <string name="machineryConnect_connecting">Connecting…</string>
+    <string name="machineryConnect_connectToDevice">Połącz z urządzeniem</string>
+    <string name="machineryConnect_deviceConnecting">Łączenie urządzeniem</string>
 
-    <string name="currentSchedule_title">Current schedule</string>
-    <string name="currentSchedule_dataFetching">Data fetching…</string>
+    <string name="machineryConnect_deviceNotConnectedYet">Nie jesteś podłączony do urządzenia</string>
+    <string name="machineryConnect_connecting">Łączenie…</string>
+
+    <string name="currentSchedule_title">Aktualny harmonogram</string>
+    <string name="currentSchedule_dataFetching">Pobieranie danych…</string>
 
 </resources>

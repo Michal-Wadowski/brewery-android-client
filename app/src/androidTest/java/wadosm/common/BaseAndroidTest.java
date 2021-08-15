@@ -12,11 +12,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import dagger.hilt.android.testing.HiltAndroidRule;
-import wadosm.bluetooth.dependency.MainDependencyProvider;
-import wadosm.bluetooth.dependency.ViewModelProviderFactory;
-import wadosm.bluetooth.main.MainActivity;
-import wadosm.bluetooth.main.MainViewModel;
-import wadosm.bluetooth.main.model.NewFragmentVDO;
+import wadosm.brewingclient.dependency.MainDependencyProvider;
+import wadosm.brewingclient.dependency.ViewModelProviderFactory;
+import wadosm.brewingclient.main.MainActivity;
+import wadosm.brewingclient.main.MainViewModel;
+import wadosm.brewingclient.main.model.NewFragmentVDO;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;

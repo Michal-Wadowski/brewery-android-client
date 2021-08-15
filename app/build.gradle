@@ -10,13 +10,13 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "wadosm.bluetooth"
+        applicationId "wadosm.brewingclient"
         minSdkVersion 23
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "wadosm.bluetooth.CustomTestRunner"
+        testInstrumentationRunner "wadosm.brewingclient.CustomTestRunner"
     }
 
     buildTypes {
