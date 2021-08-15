@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/llMain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+
+            <Switch
+                android:id="@+id/swEnable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="50dp"
+                android:text="Uruchom"
+                android:textSize="24sp" />
+
+            <LinearLayout xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="70dp"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:id="@+id/tvCurrTemperature"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textAlignment="center"
+                    android:textSize="36sp"
+                    android:textStyle="bold"
+                    android:typeface="normal"
+                    tools:text="75.0" />
+
+                <TextView
+                    android:id="@+id/tvHeatingPower"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textAlignment="center"
+                    android:textSize="36sp"
+                    android:textStyle="bold"
+                    android:typeface="normal"
+                    tools:text="50%" />
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Docelowa temperatura"
+                android:textSize="24sp" />
+
+
+            <SeekBar
+                android:id="@+id/sbDstTemperature"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="30dp" />
+
+            <EditText
+                android:id="@+id/etDstTemperature"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="50dp"
+                android:background="#FFFFFF"
+                android:ems="10"
+                android:hint="Ustaw temp."
+                android:inputType="numberDecimal"
+                android:textAlignment="center"
+                android:textSize="36sp"
+                android:textStyle="bold"
+                tools:text="93.0" />
+
+            <!--    Brewing_motorEnable-->
+            <Switch
+                android:id="@+id/swMotorEnable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="50dp"
+                android:text="Włącz silnik"
+                android:textSize="24sp" />
+
+            <!--    Brewing_enableTemperatureAlarm,-->
+            <Switch
+                android:id="@+id/swEnableTemperatureAlarm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="50dp"
+                android:text="Alarm temperatury"
+                android:textSize="24sp" />
+
+
+            <!--    Brewing_setPowerTemperatureCorrelation,-->
+            <TextView
+                android:id="@+id/tvPowerTemperatureCorrelation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Korelacja moc / temp.: [% / °C]"
+                android:textSize="24sp" />
+
+            <EditText
+                android:id="@+id/edPowerTemperatureCorrelation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="50dp"
+                android:background="#FFFFFF"
+                android:ems="10"
+                android:hint="Ustaw korelację"
+                android:inputType="numberDecimal"
+                android:textAlignment="center"
+                android:textSize="36sp"
+                android:textStyle="bold"
+                tools:text="10.0" />
+
+            <!--    Brewing_setMaxPower,-->
+            <TextView
+                android:id="@+id/tvMaxPower"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Max moc [%]"
+                android:textSize="24sp" />
+
+            <EditText
+                android:id="@+id/edMaxPower"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="50dp"
+                android:background="#FFFFFF"
+                android:ems="10"
+                android:hint="Ustaw max moc"
+                android:inputType="numberDecimal"
+                android:textAlignment="center"
+                android:textSize="36sp"
+                android:textStyle="bold"
+                tools:text="10.0" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llWaiting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pobieram dane..."
+                android:textAlignment="textStart"
+                android:textSize="24sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

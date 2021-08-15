@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -43,6 +44,8 @@ public class FermentingFragment extends Fragment {
     private SeekBar sbDstTemperature;
     private EditText etDstTemperature;
     private ImageView ivHeating;
+    private LinearLayout llWaiting;
+    private LinearLayout llMain;
 
     boolean enableChanged;
     boolean dstTemperatureChanged;
@@ -90,6 +93,9 @@ public class FermentingFragment extends Fragment {
     }
 
     private void mapResponseToView(FermentingStatusResponse response) {
+        llWaiting.setVisibility(View.GONE);
+        llMain.setVisibility(View.VISIBLE);
+
         if (enableChanged == false) {
             swEnable.setChecked(response.getFermentingState().isEnabled());
             enableChanged = true;
@@ -126,6 +132,9 @@ public class FermentingFragment extends Fragment {
     private View buildViews(LayoutInflater inflater, ViewGroup container) {
         View currentView = inflater.inflate(R.layout.fragment_fermenting, container, false);
 
+        llWaiting = currentView.findViewById(R.id.llWaiting);
+        llMain = currentView.findViewById(R.id.llMain);
+
         swEnable = currentView.findViewById(R.id.swEnable);
         swEnable.setOnCheckedChangeListener((buttonView, isChecked) -> setEnabled(isChecked));
 
@@ -160,13 +169,13 @@ public class FermentingFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (dstTemperatureChanged) {
-                    Integer value = null;
+                    Float value = null;
                     try {
-                        value = Integer.valueOf(s.toString());
+                        value = Float.valueOf(s.toString());
                     } catch (NumberFormatException nfe) {
                     }
                     if (value != null) {
-                        sbDstTemperature.setProgress(value);
+                        sbDstTemperature.setProgress(value.intValue());
                     }
                     setDstTemperature(value);
                 }
@@ -179,7 +188,7 @@ public class FermentingFragment extends Fragment {
         });
         etDstTemperature.setFilters(new InputFilter[]{(source, start, end, dest, dstart, dend) -> {
             try {
-                int input = Integer.parseInt(dest.toString() + source.toString());
+                Float input = Float.parseFloat(dest.toString() + source.toString());
                 if (input >= 0 && input <= 100) {
                     return null;
                 }
@@ -193,7 +202,7 @@ public class FermentingFragment extends Fragment {
         return currentView;
     }
 
-    private void setDstTemperature(Integer value) {
+    private void setDstTemperature(Float value) {
         model.getDeviceConnectivity().getDeviceService().Fermenting_setDestinationTemperature(value);
     }
 

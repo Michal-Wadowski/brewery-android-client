@@ -2,7 +2,6 @@ package wadosm.bluetooth.connectivity;
 
 
 import wadosm.bluetooth.common.Consumer;
-import wadosm.bluetooth.connectivity.model.StateElements;
 
 public interface DeviceService {
 
@@ -20,7 +19,21 @@ public interface DeviceService {
 
     int getFermentingState();
 
-    int Fermenting_setDestinationTemperature(Integer value);
+    int Fermenting_setDestinationTemperature(Float value);
 
     int Fermenting_enable(boolean enable);
+
+    int Brewing_setDestinationTemperature(Float value);
+
+    int Brewing_enable(boolean enable);
+
+    int getBrewingState();
+
+    int Brewing_motorEnable(boolean enable);
+
+    int Brewing_enableTemperatureAlarm(boolean enable);
+
+    int Brewing_setMaxPower(Integer value);
+
+    int Brewing_setPowerTemperatureCorrelation(Float value);
 }

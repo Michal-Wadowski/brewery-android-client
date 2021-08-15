@@ -4,18 +4,14 @@ import android.os.Handler;
 
 import com.google.gson.Gson;
 
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Random;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import wadosm.bluetooth.common.Consumer;
 import wadosm.bluetooth.connectivity.DeviceService;
-import wadosm.bluetooth.connectivity.model.StateElement;
-import wadosm.bluetooth.connectivity.model.StateElements;
+import wadosm.bluetooth.currentschedule.dto.BrewingState;
+import wadosm.bluetooth.currentschedule.dto.BrewingStatusResponse;
 import wadosm.bluetooth.currentschedule.dto.FermentingState;
 import wadosm.bluetooth.currentschedule.dto.FermentingStatusResponse;
 
@@ -32,6 +28,8 @@ public class DemoDeviceService implements DeviceService {
     private Random random = new Random();
 
     private FermentingState fermentingState = new FermentingState(false, 25.0f, null, false);
+
+    private BrewingState brewingState = new BrewingState(false, 60.0f, null, null, null, null, false, false, 70);
 
     @Override
     public void disconnect() {
@@ -78,16 +76,12 @@ public class DemoDeviceService implements DeviceService {
     }
 
     @Override
-    public int Fermenting_setDestinationTemperature(Integer value) {
+    public int Fermenting_setDestinationTemperature(Float value) {
         int pendingCommandId = ++commandId;
 
         scheduler.postDelayed(() -> {
             for (Consumer<String> listener: fetchCurrentDeviceStateCallbackQueue) {
-                Float floatValue = null;
-                if (value != null) {
-                    floatValue = (float)value;
-                }
-                fermentingState.setDestinationTemperature(floatValue);
+                fermentingState.setDestinationTemperature(value);
                 listener.accept(gson.toJson(new FermentingStatusResponse(pendingCommandId, null, fermentingState)));
             }
         }, 100);
@@ -103,6 +97,105 @@ public class DemoDeviceService implements DeviceService {
             for (Consumer<String> listener: fetchCurrentDeviceStateCallbackQueue) {
                 fermentingState.setEnabled(enable);
                 listener.accept(gson.toJson(new FermentingStatusResponse(pendingCommandId, null, fermentingState)));
+            }
+        }, 100);
+
+        return pendingCommandId;
+    }
+
+    @Override
+    public int Brewing_setDestinationTemperature(Float value) {
+        int pendingCommandId = ++commandId;
+
+        scheduler.postDelayed(() -> {
+            for (Consumer<String> listener: fetchCurrentDeviceStateCallbackQueue) {
+                brewingState.setDestinationTemperature(value);
+                listener.accept(gson.toJson(new BrewingStatusResponse(pendingCommandId, null, brewingState)));
+            }
+        }, 100);
+
+        return pendingCommandId;
+    }
+
+    @Override
+    public int Brewing_enable(boolean enable) {
+        int pendingCommandId = ++commandId;
+
+        scheduler.postDelayed(() -> {
+            for (Consumer<String> listener: fetchCurrentDeviceStateCallbackQueue) {
+                brewingState.setEnabled(enable);
+                listener.accept(gson.toJson(new BrewingStatusResponse(pendingCommandId, null, brewingState)));
+            }
+        }, 100);
+
+        return pendingCommandId;
+    }
+
+    @Override
+    public int getBrewingState() {
+        int pendingCommandId = ++commandId;
+
+        scheduler.postDelayed(() -> {
+            for (Consumer<String> listener: fetchCurrentDeviceStateCallbackQueue) {
+                brewingState.setCurrentTemperature(random.nextFloat() - 0.5f + brewingState.getCurrentTemperature());
+                listener.accept(gson.toJson(new BrewingStatusResponse(pendingCommandId, null, brewingState)));
+            }
+        }, 100);
+
+        return pendingCommandId;
+    }
+
+    @Override
+    public int Brewing_motorEnable(boolean enable) {
+        int pendingCommandId = ++commandId;
+
+        scheduler.postDelayed(() -> {
+            for (Consumer<String> listener: fetchCurrentDeviceStateCallbackQueue) {
+                brewingState.setMotorEnabled(enable);
+                listener.accept(gson.toJson(new BrewingStatusResponse(pendingCommandId, null, brewingState)));
+            }
+        }, 100);
+
+        return pendingCommandId;
+    }
+
+    @Override
+    public int Brewing_enableTemperatureAlarm(boolean enable) {
+        int pendingCommandId = ++commandId;
+
+        scheduler.postDelayed(() -> {
+            for (Consumer<String> listener: fetchCurrentDeviceStateCallbackQueue) {
+                brewingState.setTemperatureAlarm(enable);
+                listener.accept(gson.toJson(new BrewingStatusResponse(pendingCommandId, null, brewingState)));
+            }
+        }, 100);
+
+        return pendingCommandId;
+
+    }
+
+    @Override
+    public int Brewing_setMaxPower(Integer value) {
+        int pendingCommandId = ++commandId;
+
+        scheduler.postDelayed(() -> {
+            for (Consumer<String> listener: fetchCurrentDeviceStateCallbackQueue) {
+                brewingState.setMaxPower(value);
+                listener.accept(gson.toJson(new BrewingStatusResponse(pendingCommandId, null, brewingState)));
+            }
+        }, 100);
+
+        return pendingCommandId;
+    }
+
+    @Override
+    public int Brewing_setPowerTemperatureCorrelation(Float value) {
+        int pendingCommandId = ++commandId;
+
+        scheduler.postDelayed(() -> {
+            for (Consumer<String> listener: fetchCurrentDeviceStateCallbackQueue) {
+                brewingState.setPowerTemperatureCorrelation(value);
+                listener.accept(gson.toJson(new BrewingStatusResponse(pendingCommandId, null, brewingState)));
             }
         }, 100);
 

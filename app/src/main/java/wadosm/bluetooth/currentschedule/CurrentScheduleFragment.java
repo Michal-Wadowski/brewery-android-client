@@ -54,9 +54,12 @@ public class CurrentScheduleFragment extends Fragment {
                 )
         ));
         Button btnBrewing = currentView.findViewById(R.id.btn_brewing);
-        btnBrewing.setOnClickListener(v -> {
-
-        });
+        btnBrewing.setOnClickListener(v -> model.switchFramgment(getActivity(),
+                new NewFragmentVDO(
+                        BrewingFragment.newInstance(model),
+                        true
+                )
+        ));
 
         getActivity().setTitle("Połączono");
 

@@ -1,7 +1,5 @@
 package wadosm.bluetooth.connectivity.real;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
 import com.harrysoft.androidbluetoothserial.BluetoothManager;
 import com.harrysoft.androidbluetoothserial.BluetoothSerialDevice;
@@ -76,7 +74,7 @@ public class RealDeviceService implements DeviceService {
     }
 
     @Override
-    public int Fermenting_setDestinationTemperature(Integer value) {
+    public int Fermenting_setDestinationTemperature(Float value) {
         commandId++;
         deviceInterface.sendMessage(gson.toJson(CommandDTO.Fermenting_setDestinationTemperature(commandId, value)));
         return commandId;
@@ -86,6 +84,55 @@ public class RealDeviceService implements DeviceService {
     public int Fermenting_enable(boolean enable) {
         commandId++;
         deviceInterface.sendMessage(gson.toJson(CommandDTO.Fermenting_enable(commandId, enable)));
+        return commandId;
+    }
+
+    @Override
+    public int Brewing_setDestinationTemperature(Float value) {
+        commandId++;
+        deviceInterface.sendMessage(gson.toJson(CommandDTO.Brewing_setDestinationTemperature(commandId, value)));
+        return commandId;
+    }
+
+    @Override
+    public int Brewing_enable(boolean enable) {
+        commandId++;
+        deviceInterface.sendMessage(gson.toJson(CommandDTO.Brewing_enable(commandId, enable)));
+        return commandId;
+    }
+
+    @Override
+    public int getBrewingState() {
+        commandId++;
+        deviceInterface.sendMessage(gson.toJson(CommandDTO.Brewing_getBrewingState(commandId)));
+        return commandId;
+    }
+
+    @Override
+    public int Brewing_motorEnable(boolean enable) {
+        commandId++;
+        deviceInterface.sendMessage(gson.toJson(CommandDTO.Brewing_motorEnable(commandId, enable)));
+        return commandId;
+    }
+
+    @Override
+    public int Brewing_enableTemperatureAlarm(boolean enable) {
+        commandId++;
+        deviceInterface.sendMessage(gson.toJson(CommandDTO.Brewing_enableTemperatureAlarm(commandId, enable)));
+        return commandId;
+    }
+
+    @Override
+    public int Brewing_setMaxPower(Integer value) {
+        commandId++;
+        deviceInterface.sendMessage(gson.toJson(CommandDTO.Brewing_setMaxPower(commandId, value)));
+        return commandId;
+    }
+
+    @Override
+    public int Brewing_setPowerTemperatureCorrelation(Float value) {
+        commandId++;
+        deviceInterface.sendMessage(gson.toJson(CommandDTO.Brewing_setPowerTemperatureCorrelation(commandId, value)));
         return commandId;
     }
 

@@ -20,17 +20,17 @@ public class CommandDTO {
 
     private Float floatValue;
 
-    public static CommandDTO Fermenting_setDestinationTemperature(int commandId, Integer value) {
+    public static CommandDTO Fermenting_setDestinationTemperature(int commandId, Float value) {
         CommandDTO commandDTO = new CommandDTO();
-        commandDTO.command = Command.Fermenting_getFermentingState;
+        commandDTO.command = Command.Fermenting_setDestinationTemperature;
         commandDTO.commandId = commandId;
-        commandDTO.floatValue = (float)value;
+        commandDTO.floatValue = value;
         return commandDTO;
     }
 
     public static CommandDTO Fermenting_enable(int commandId, boolean enable) {
         CommandDTO commandDTO = new CommandDTO();
-        commandDTO.command = Command.Fermenting_getFermentingState;
+        commandDTO.command = Command.Fermenting_enable;
         commandDTO.commandId = commandId;
         commandDTO.enable = enable;
         return commandDTO;
@@ -52,6 +52,61 @@ public class CommandDTO {
     public static CommandDTO Power_restart() {
         CommandDTO commandDTO = new CommandDTO();
         commandDTO.command = Command.Power_restart;
+        return commandDTO;
+    }
+
+    public static CommandDTO Brewing_setDestinationTemperature(int commandId, Float value) {
+        CommandDTO commandDTO = new CommandDTO();
+        commandDTO.command = Command.Brewing_setDestinationTemperature;
+        commandDTO.commandId = commandId;
+        commandDTO.floatValue = value;
+        return commandDTO;
+    }
+
+    public static CommandDTO Brewing_enable(int commandId, boolean enable) {
+        CommandDTO commandDTO = new CommandDTO();
+        commandDTO.command = Command.Brewing_enable;
+        commandDTO.commandId = commandId;
+        commandDTO.enable = enable;
+        return commandDTO;
+    }
+
+    public static CommandDTO Brewing_getBrewingState(int commandId) {
+        CommandDTO commandDTO = new CommandDTO();
+        commandDTO.command = Command.Brewing_getBrewingState;
+        commandDTO.commandId = commandId;
+        return commandDTO;
+    }
+
+    public static Object Brewing_motorEnable(int commandId, boolean enable) {
+        CommandDTO commandDTO = new CommandDTO();
+        commandDTO.command = Command.Brewing_motorEnable;
+        commandDTO.commandId = commandId;
+        commandDTO.enable = enable;
+        return commandDTO;
+    }
+
+    public static Object Brewing_enableTemperatureAlarm(int commandId, boolean enable) {
+        CommandDTO commandDTO = new CommandDTO();
+        commandDTO.command = Command.Brewing_enableTemperatureAlarm;
+        commandDTO.commandId = commandId;
+        commandDTO.enable = enable;
+        return commandDTO;
+    }
+
+    public static Object Brewing_setMaxPower(int commandId, Integer value) {
+        CommandDTO commandDTO = new CommandDTO();
+        commandDTO.command = Command.Brewing_setMaxPower;
+        commandDTO.commandId = commandId;
+        commandDTO.intValue = value;
+        return commandDTO;
+    }
+
+    public static Object Brewing_setPowerTemperatureCorrelation(int commandId, Float value) {
+        CommandDTO commandDTO = new CommandDTO();
+        commandDTO.command = Command.Brewing_setMaxPower;
+        commandDTO.commandId = commandId;
+        commandDTO.floatValue = value;
         return commandDTO;
     }
 
