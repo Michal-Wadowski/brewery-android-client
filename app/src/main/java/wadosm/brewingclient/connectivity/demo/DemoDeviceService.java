@@ -50,6 +50,15 @@ public class DemoDeviceService implements DeviceService {
         fetchCurrentDeviceStateCallbackQueue.remove(onJsonReceivedCallback);
     }
 
+    @Override
+    public void addErrorListener(Consumer<Throwable> onErrorCallback) {
+
+    }
+
+    @Override
+    public void removeErrorListener(Consumer<Throwable> onErrorCallback) {
+
+    }
 
     @Override
     public void powerOff() {

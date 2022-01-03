@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity implements MainViewModelGett
         model.onActivityInit();
     }
 
+
+
     private void buildViews() {
         setContentView(R.layout.activity_main);
     }

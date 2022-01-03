@@ -13,6 +13,10 @@ public interface DeviceService {
 
     void removeResponseListener(Consumer<String> onJsonReceivedCallback);
 
+    void addErrorListener(Consumer<Throwable> onErrorCallback);
+
+    void removeErrorListener(Consumer<Throwable> onErrorCallback);
+
     void powerOff();
 
     void restart();

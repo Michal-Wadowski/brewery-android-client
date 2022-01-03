@@ -33,6 +33,8 @@ public class BrewingFragment extends Fragment {
 
     private Consumer<String> onJsonReceivedCallback;
 
+    private Consumer<Throwable> onErrorCallback;
+
     private Integer commandId;
 
     private Gson gson = new Gson();
@@ -70,25 +72,35 @@ public class BrewingFragment extends Fragment {
         getActivity().setTitle("Warzenie");
 
         onJsonReceivedCallback = jsonText -> {
-            if (commandId != null) {
+//            if (commandId != null) {
 
-                ResponseDTO abstractResponse = gson.fromJson(jsonText, ResponseDTO.class);
-                if (abstractResponse.getCommandId().equals(commandId)) {
-                    commandId = null;
-                    BrewingStatusResponse response = gson.fromJson(jsonText, BrewingStatusResponse.class);
+//                ResponseDTO abstractResponse = gson.fromJson(jsonText, ResponseDTO.class);
+//                if (abstractResponse.getCommandId().equals(commandId)) {
+//                    commandId = null;
+                    try {
+                        BrewingStatusResponse response = gson.fromJson(jsonText, BrewingStatusResponse.class);
+                        mapResponseToView(response);
+                    } catch (Exception ignored) {}
 
-                    mapResponseToView(response);
-                }
-            }
+
+//                }
+//            }
         };
         model.getDeviceConnectivity().getDeviceService().addResponseListener(onJsonReceivedCallback);
+
+//        onErrorCallback = error -> {
+//            getActivity().finish();
+//        };
+//        model.getDeviceConnectivity().getDeviceService().addErrorListener(onErrorCallback);
 
         scheduler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 if (scheduler != null) {
-                    commandId = model.getDeviceConnectivity().getDeviceService().getBrewingState();
-                    scheduler.postDelayed(this, 1000);
+                    if (model.getDeviceConnectivity().isConnected()) {
+                        commandId = model.getDeviceConnectivity().getDeviceService().getBrewingState();
+                        scheduler.postDelayed(this, 200);
+                    }
                 }
             }
         }, 1000);
@@ -138,7 +150,7 @@ public class BrewingFragment extends Fragment {
 
         if (motorEnableChanged == false) {
             swMotorEnable.setChecked(response.getBrewingState().isMotorEnabled());
-            enableChanged = true;
+            motorEnableChanged = true;
         }
         if (temperatureAlarmChanged == false) {
             swEnableTemperatureAlarm.setChecked(response.getBrewingState().isTemperatureAlarm());

@@ -18,6 +18,8 @@ public class MachineryConnectLogic {
 
     private DeviceConnectivity deviceConnectivity;
 
+    private Consumer<Throwable> onErrorCallback;
+
     @Inject
     public MachineryConnectLogic(FragmentFactory fragmentFactory, DeviceConnectivity deviceConnectivity) {
         this.fragmentFactory = fragmentFactory;
@@ -56,12 +58,28 @@ public class MachineryConnectLogic {
         // TODO: Attach onDisconnected callack to go back to MachineryConnectFragment
         // TODO: Write tests for that
 
-        return () -> machineryConnect.switchFramgment(activity,
-                new NewFragmentVDO(
-                        fragmentFactory.getCurrentScheduleFragment(),
-                        false
-                )
-        );
+        onErrorCallback = error -> {
+//            activity.finish();
+
+            machineryConnect.switchFramgment(activity,
+                    new NewFragmentVDO(
+                            fragmentFactory.getMachineryConnectFragment(),
+                            false
+                    )
+            );
+        };
+
+        return () -> {
+            deviceConnectivity.getDeviceService().removeErrorListener(onErrorCallback);
+            deviceConnectivity.getDeviceService().addErrorListener(onErrorCallback);
+
+            machineryConnect.switchFramgment(activity,
+                    new NewFragmentVDO(
+                            fragmentFactory.getCurrentScheduleFragment(),
+                            false
+                    )
+            );
+        };
     }
 
 }
