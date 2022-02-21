@@ -163,4 +163,10 @@ public class RealDeviceService implements DeviceService {
         return gson.toJson(value) + "\n";
     }
 
+    @Override
+    public int Brewing_setCalibrationValue(Integer side, Float value) {
+        commandId++;
+        deviceInterface.sendMessage(toJson(CommandDTO.Brewing_setCalibrationValue(commandId, side, value)));
+        return commandId;
+    }
 }

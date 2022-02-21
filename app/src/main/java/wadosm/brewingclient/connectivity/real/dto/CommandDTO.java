@@ -110,6 +110,16 @@ public class CommandDTO {
         return commandDTO;
     }
 
+    public static Object Brewing_setCalibrationValue(int commandId, Integer side, Float value) {
+        CommandDTO commandDTO = new CommandDTO();
+        commandDTO.command = Command.Brewing_setPowerTemperatureCorrelation;
+        commandDTO.commandId = commandId;
+        commandDTO.number = side;
+        commandDTO.floatValue = value;
+        return commandDTO;
+    }
+
+
     @Getter
     @ToString
     public enum Command {
@@ -142,6 +152,9 @@ public class CommandDTO {
         @SerializedName("Brewing.removeTimer")
         Brewing_removeTimer,
         @SerializedName("Brewing.motorEnable")
-        Brewing_motorEnable
+        Brewing_motorEnable,
+
+        @SerializedName("Brewing.calibrateTemperature")
+        Brewing_calibrateTemperature
     }
 }

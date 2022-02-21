@@ -211,4 +211,9 @@ public class DemoDeviceService implements DeviceService {
         return pendingCommandId;
     }
 
+    @Override
+    public int Brewing_setCalibrationValue(Integer side, Float value) {
+        return ++commandId;
+    }
+
 }

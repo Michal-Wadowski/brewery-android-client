@@ -8,9 +8,10 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
+import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -22,7 +23,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 import wadosm.brewingclient.R;
 import wadosm.brewingclient.common.Consumer;
 import wadosm.brewingclient.currentschedule.dto.BrewingStatusResponse;
-import wadosm.brewingclient.currentschedule.dto.ResponseDTO;
 
 @AndroidEntryPoint
 public class BrewingFragment extends Fragment {
@@ -50,6 +50,13 @@ public class BrewingFragment extends Fragment {
     private LinearLayout llWaiting;
     private LinearLayout llMain;
 
+    private Switch swEnableCalibration;
+    private LinearLayout llCalibration;
+    private RadioButton rbCalibrationTop;
+    private RadioButton rbCalibrationBottom;
+    private LinearLayout llCalibrationValue;
+    private EditText edCurrCalibration;
+
     boolean enableChanged;
     boolean dstTemperatureChanged;
     boolean powerTemperatureCorrelationChanged;
@@ -72,26 +79,12 @@ public class BrewingFragment extends Fragment {
         getActivity().setTitle("Warzenie");
 
         onJsonReceivedCallback = jsonText -> {
-//            if (commandId != null) {
-
-//                ResponseDTO abstractResponse = gson.fromJson(jsonText, ResponseDTO.class);
-//                if (abstractResponse.getCommandId().equals(commandId)) {
-//                    commandId = null;
-                    try {
-                        BrewingStatusResponse response = gson.fromJson(jsonText, BrewingStatusResponse.class);
-                        mapResponseToView(response);
-                    } catch (Exception ignored) {}
-
-
-//                }
-//            }
+            try {
+                BrewingStatusResponse response = gson.fromJson(jsonText, BrewingStatusResponse.class);
+                mapResponseToView(response);
+            } catch (Exception ignored) {}
         };
         model.getDeviceConnectivity().getDeviceService().addResponseListener(onJsonReceivedCallback);
-
-//        onErrorCallback = error -> {
-//            getActivity().finish();
-//        };
-//        model.getDeviceConnectivity().getDeviceService().addErrorListener(onErrorCallback);
 
         scheduler.postDelayed(new Runnable() {
             @Override
@@ -284,7 +277,83 @@ public class BrewingFragment extends Fragment {
             return "";
         }});
 
+        llCalibration = currentView.findViewById(R.id.llCalibration);
+        swEnableCalibration = currentView.findViewById(R.id.swEnableCalibration);
+        swEnableCalibration.setOnCheckedChangeListener((buttonView, isChecked) -> llCalibration.setVisibility(isChecked ? View.VISIBLE : View.GONE));
+
+        llCalibrationValue = currentView.findViewById(R.id.llCalibrationValue);
+        edCurrCalibration = currentView.findViewById(R.id.edCurrCalibration);
+
+        rbCalibrationTop = currentView.findViewById(R.id.rbCalibrationTop);
+        rbCalibrationTop.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            llCalibrationValue.setVisibility(View.VISIBLE);
+            edCurrCalibration.setText("");
+        });
+        rbCalibrationBottom = currentView.findViewById(R.id.rbCalibrationBottom);
+        rbCalibrationBottom.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            llCalibrationValue.setVisibility(View.VISIBLE);
+            edCurrCalibration.setText("");
+        });
+
+
+
+
+
+
+
+
+        edCurrCalibration.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (maxPowerChanged) {
+                    Float value = null;
+                    try {
+                        value = Float.valueOf(s.toString());
+                    } catch (NumberFormatException nfe) {
+                    }
+                    Integer side = null;
+                    if (rbCalibrationTop.isChecked()) {
+                        side = 1;
+                    }
+                    if (rbCalibrationBottom.isChecked()) {
+                        side = 0;
+                    }
+                    if (side != null) {
+                        setCalibrationValue(side, value);
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        edCurrCalibration.setFilters(new InputFilter[]{(source, start, end, dest, dstart, dend) -> {
+            try {
+                Integer input = Integer.parseInt(dest.toString() + source.toString());
+                if (input >= 0 && input <= 100) {
+                    return null;
+                }
+            } catch (NumberFormatException nfe) {
+            }
+            return "";
+        }});
+
+
+
+
         return currentView;
+    }
+
+    private void setCalibrationValue(Integer side, Float value) {
+        model.getDeviceConnectivity().getDeviceService().Brewing_setCalibrationValue(side, value);
     }
 
     private void setDstTemperature(Float value) {

@@ -40,4 +40,6 @@ public interface DeviceService {
     int Brewing_setMaxPower(Integer value);
 
     int Brewing_setPowerTemperatureCorrelation(Float value);
+
+    int Brewing_setCalibrationValue(Integer side, Float value);
 }
